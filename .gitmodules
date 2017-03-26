@@ -1,0 +1,3 @@
+[submodule "firmware/esp82xx"]
+	path = firmware/esp82xx
+	url = https://github.com/cnlohr/esp82xx
