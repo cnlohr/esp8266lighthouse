@@ -113,7 +113,7 @@ void ICACHE_FLASH_ATTR user_init(void)
 	os_timer_disarm(&some_timer);
 	os_timer_setfn(&some_timer, (os_timer_func_t *)myTimer, NULL);
 	os_timer_arm(&some_timer, 100, 1);
-
+	wifi_set_opmode_current(0);
 
 	//Configure 
 	testi2s_init();

@@ -12,8 +12,8 @@
 
 
 //These contol the speed at which the bus comms.
-#define WS_I2S_BCK 8  //Can't be less than 1.
-#define WS_I2S_DIV 80000
+#define WS_I2S_BCK 2  //Can't be less than 1.
+#define WS_I2S_DIV 2
 
 //I2S DMA buffer descriptors
 static struct sdio_queue i2sBufDescRX[DMABUFFERDEPTH];
@@ -44,7 +44,6 @@ LOCAL void slc_isr(void) {
 	if ( (slc_intr_status & SLC_TX_EOF_INT_ST))
 	{
 		finishedDesc=(struct sdio_queue*)READ_PERI_REG(SLC_TX_EOF_DES_ADDR);
-		printf( ".\n" );
 /*
 		uint32_t * data = finishedDesc->buf_ptr;
 		int i;
@@ -62,16 +61,23 @@ LOCAL void slc_isr(void) {
 		erx++;
 */
 
+/*
+		static int chargepumpcount = 0;
 		static int chargepumpstate = 0;
-		switch( chargepumpstate++ )
+		if( chargepumpcount++ == 10 )
 		{
-		case 0: PIN_OUT_CLEAR = _BV(13) | _BV(14); break;
-		case 1: PIN_OUT_SET = _BV(13); break;
-		case 2: PIN_OUT_SET = _BV(14); break;
-		default: PIN_OUT_CLEAR = _BV(13);
-			chargepumpstate = 0;
-			break;
+			chargepumpcount = 0;
+			chargepumpstate ++;
+			if( chargepumpstate == 4 ) chargepumpstate = 0;
 		}
+		switch( chargepumpstate )
+		{
+		case 0: PIN_OUT_SET = _BV(13) | _BV(14); break;
+		case 1: PIN_OUT_CLEAR = _BV(13); break;
+		case 2: PIN_OUT_SET = _BV(13); break;
+		default: PIN_OUT_CLEAR = _BV(14); 	break;
+		}
+*/
 	}
 
 
