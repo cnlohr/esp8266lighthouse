@@ -1,9 +1,9 @@
-(kicad_pcb (version 4) (host pcbnew 4.0.2+dfsg1-stable)
+(kicad_pcb (version 4) (host pcbnew 4.0.6-e0-6349~53~ubuntu16.04.1)
 
   (general
     (links 51)
     (no_connects 0)
-    (area 23.07012 27.513857 75.77988 48.797571)
+    (area 18.396859 26.035 75.87988 48.722571)
     (thickness 1.6)
     (drawings 34)
     (tracks 160)
@@ -64,7 +64,7 @@
     (aux_axis_origin 0 0)
     (visible_elements FFFFFF5F)
     (pcbplotparams
-      (layerselection 0x00030_80000001)
+      (layerselection 0x00000_00000001)
       (usegerberextensions false)
       (excludeedgelayer true)
       (linewidth 0.100000)
@@ -83,7 +83,7 @@
       (plotinvisibletext false)
       (padsonsilk false)
       (subtractmaskfromsilk false)
-      (outputformat 1)
+      (outputformat 2)
       (mirror false)
       (drillshape 1)
       (scaleselection 1)

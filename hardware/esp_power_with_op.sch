@@ -171,6 +171,8 @@ LIBS:choke
 LIBS:dualopamp
 LIBS:max3010x
 LIBS:l6474
+LIBS:diodearray_sot23-3
+LIBS:mic920yc5
 LIBS:esp_power_with_op-cache
 EELAYER 25 0
 EELAYER END
@@ -891,4 +893,6 @@ F 3 "" H 2750 2200 50  0000 C CNN
 	1    2750 2200
 	-1   0    0    1   
 $EndComp
+Text Notes 4100 6050 0    60   ~ 0
+Or compatible with TC75S57FU(TE85L,F) 
 $EndSCHEMATC
