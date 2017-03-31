@@ -1,0 +1,727 @@
+EESchema Schematic File Version 2
+LIBS:transimpedance-rescue
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:zener-sot23-3
+LIBS:xfrmr2x2
+LIBS:ws_switch
+LIBS:ws2812b
+LIBS:usb-prot-ip4220cz6
+LIBS:usbmicrob-10118194-0001lf
+LIBS:usb3-gsb443133hr
+LIBS:um5k1ntr
+LIBS:tvs-bidirection
+LIBS:tvs-2x
+LIBS:tvs2-wurth-82400102
+LIBS:tusb2077a
+LIBS:tlv711
+LIBS:tlv320adc3101
+LIBS:tcs3x7x
+LIBS:tactile
+LIBS:stm32f407_100
+LIBS:stm32f303_32
+LIBS:stm32f303
+LIBS:stm32f301
+LIBS:stm32f207
+LIBS:stbc08-battcharger
+LIBS:sp3010-04utg
+LIBS:sp485cn
+LIBS:rs485-isl3170
+LIBS:rn-cay16-f4
+LIBS:resonator6smd
+LIBS:pwrcnv_nxe1s0305mc-r7
+LIBS:pusb2x4y
+LIBS:protect_ncp360snt1g
+LIBS:pnp-sot23
+LIBS:pl140c
+LIBS:photomos
+LIBS:pfetwsmini6-f1-b
+LIBS:pfetsot223
+LIBS:pcb_bom
+LIBS:ov2640_ribbon
+LIBS:opto-logic-tlp2361
+LIBS:opto2-ltv-826s
+LIBS:opamp_mcp6001t
+LIBS:opa832
+LIBS:npn-2222
+LIBS:nor-nc7sz02p5x
+LIBS:network0606
+LIBS:neon14
+LIBS:ms5611-01ba03
+LIBS:mpu-9250
+LIBS:mpl3115a2
+LIBS:mos_p_d2
+LIBS:mos_n_w_diode
+LIBS:mosfetx2vdfn8
+LIBS:mosfet-lfpak56
+LIBS:mosdriver_ncp5901bmntbg
+LIBS:mmpq2907a
+LIBS:mma8653fc-accel
+LIBS:microsd_1050270001
+LIBS:mic550x-reg
+LIBS:mfrc522
+LIBS:memi2c_m24m02-dr
+LIBS:mcp23008-soic
+LIBS:mcp23008-qfn
+LIBS:mcp1824_ct
+LIBS:mcp1804
+LIBS:mcp1803
+LIBS:max31855
+LIBS:max3010x
+LIBS:mag3110
+LIBS:lvt-816s
+LIBS:ltv-846s
+LIBS:ltc2471cms
+LIBS:LSM9DS1
+LIBS:lsm303dlhc
+LIBS:lsm303d
+LIBS:lsm303c
+LIBS:lsm9ds1
+LIBS:lsm9ds0
+LIBS:LNK3202
+LIBS:lm386
+LIBS:lis3mdl
+LIBS:lan8720a
+LIBS:l6474
+LIBS:l6470-powerso36
+LIBS:l6470
+LIBS:ksz8081rn
+LIBS:jfet-n_sot-23
+LIBS:isol_adum1201brz
+LIBS:isl3177
+LIBS:ir2101
+LIBS:hv9910c
+LIBS:halleffect-tcs20dlr
+LIBS:ft600q
+LIBS:flipflop-sn74lvc1g175
+LIBS:exb-a
+LIBS:esp8266-wi07-6
+LIBS:esp8266ex
+LIBS:esp32
+LIBS:esp12e
+LIBS:enc424j600
+LIBS:dualopamp
+LIBS:ds2438z
+LIBS:dmp2240udm
+LIBS:diode-to-277-3
+LIBS:cyusb3012
+LIBS:crystal-4p
+LIBS:cp2104
+LIBS:choke
+LIBS:cd4021
+LIBS:cap1128
+LIBS:can_sn65hvd251qdrq1
+LIBS:bridge-MB2S-TP
+LIBS:bmp280
+LIBS:bmp085
+LIBS:bluetoothedpa
+LIBS:BELFuse_Ethernet
+LIBS:avr_usb_3v3-cache
+LIBS:avr6pin
+LIBS:atx_power
+LIBS:attinyx5
+LIBS:attinyx4
+LIBS:attiny441-qfn
+LIBS:attiny441
+LIBS:atmel_kk
+LIBS:atmegaxu2
+LIBS:atmegax8pb
+LIBS:atmega1284rfr2
+LIBS:atmega48_88_168_328_tqfp32
+LIBS:ap1117
+LIBS:ak5358b
+LIBS:adc-ltc2450
+LIBS:ad9216
+LIBS:a4447sljtr
+LIBS:7805to220
+LIBS:7805
+LIBS:5050RGB
+LIBS:4427
+LIBS:1206network
+LIBS:74hc4067
+LIBS:74hc390
+LIBS:25q40b
+LIBS:23lc1024
+LIBS:6multi
+LIBS:2.4GHZ_2450FB15L0001
+LIBS:transimpedance-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L DUALOPAMP U1
+U 1 1 58DD3B39
+P 4700 2200
+F 0 "U1" H 4700 2450 60  0000 C CNN
+F 1 "DUALOPAMP" H 4700 1950 60  0000 C CNN
+F 2 "SOIC-8_3.9x4.9mm_Pitch1.27mm" H 4700 2250 60  0001 C CNN
+F 3 "" H 4700 2250 60  0001 C CNN
+	1    4700 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R1
+U 1 1 58DD3BB5
+P 3400 2150
+F 0 "R1" V 3480 2150 50  0000 C CNN
+F 1 "22k" V 3400 2150 50  0000 C CNN
+F 2 "C_0805" H 3400 2550 50  0000 C CNN
+F 3 "" H 3400 2150 50  0000 C CNN
+	1    3400 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C1
+U 1 1 58DD3BE8
+P 3200 2150
+F 0 "C1" H 3225 2250 50  0000 L CNN
+F 1 "DNP" H 3225 2050 50  0000 L CNN
+F 2 "C_0805" V 3100 2350 50  0000 C CNN
+F 3 "" H 3200 2150 50  0000 C CNN
+	1    3200 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L LED-RESCUE-transimpedance D1
+U 1 1 58DD3E79
+P 3950 2750
+F 0 "D1" H 3950 2850 50  0000 C CNN
+F 1 "BLUE" H 3950 2650 50  0000 C CNN
+F 2 "C_0805" H 3950 2750 50  0000 C CNN
+F 3 "" H 3950 2750 50  0000 C CNN
+	1    3950 2750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR01
+U 1 1 58DD3F49
+P 4250 2350
+F 0 "#PWR01" H 4250 2100 50  0001 C CNN
+F 1 "GND" H 4250 2200 50  0000 C CNN
+F 2 "" H 4250 2350 50  0000 C CNN
+F 3 "" H 4250 2350 50  0000 C CNN
+	1    4250 2350
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR02
+U 1 1 58DD3F67
+P 3950 2950
+F 0 "#PWR02" H 3950 2700 50  0001 C CNN
+F 1 "GND" H 3950 2800 50  0000 C CNN
+F 2 "" H 3950 2950 50  0000 C CNN
+F 3 "" H 3950 2950 50  0000 C CNN
+	1    3950 2950
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R2
+U 1 1 58DD3F94
+P 4400 1700
+F 0 "R2" V 4480 1700 50  0000 C CNN
+F 1 "10k" V 4400 1700 50  0000 C CNN
+F 2 "C_0805" V 4330 1700 50  0000 C CNN
+F 3 "" H 4400 1700 50  0000 C CNN
+	1    4400 1700
+	0    1    1    0   
+$EndComp
+$Comp
+L +3.3V #PWR03
+U 1 1 58DD3FEE
+P 4550 1700
+F 0 "#PWR03" H 4550 1550 50  0001 C CNN
+F 1 "+3.3V" H 4550 1840 50  0000 C CNN
+F 2 "" H 4550 1700 50  0000 C CNN
+F 3 "" H 4550 1700 50  0000 C CNN
+	1    4550 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L +3.3V #PWR04
+U 1 1 58DD4014
+P 5150 2050
+F 0 "#PWR04" H 5150 1900 50  0001 C CNN
+F 1 "+3.3V" H 5150 2190 50  0000 C CNN
+F 2 "" H 5150 2050 50  0000 C CNN
+F 3 "" H 5150 2050 50  0000 C CNN
+	1    5150 2050
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C2
+U 1 1 58DD4042
+P 5000 1350
+F 0 "C2" H 5025 1450 50  0000 L CNN
+F 1 "10u" H 5025 1250 50  0000 L CNN
+F 2 "C_0805" H 4750 1350 50  0000 C CNN
+F 3 "" H 5000 1350 50  0000 C CNN
+	1    5000 1350
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C3
+U 1 1 58DD40AE
+P 5250 1350
+F 0 "C3" H 5275 1450 50  0000 L CNN
+F 1 "10n" H 5275 1250 50  0000 L CNN
+F 2 "C_0805" H 5288 1200 50  0000 C CNN
+F 3 "" H 5250 1350 50  0000 C CNN
+	1    5250 1350
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR05
+U 1 1 58DD4181
+P 5000 1500
+F 0 "#PWR05" H 5000 1250 50  0001 C CNN
+F 1 "GND" H 5000 1350 50  0000 C CNN
+F 2 "" H 5000 1500 50  0000 C CNN
+F 3 "" H 5000 1500 50  0000 C CNN
+	1    5000 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR06
+U 1 1 58DD41A1
+P 5250 1500
+F 0 "#PWR06" H 5250 1250 50  0001 C CNN
+F 1 "GND" H 5250 1350 50  0000 C CNN
+F 2 "" H 5250 1500 50  0000 C CNN
+F 3 "" H 5250 1500 50  0000 C CNN
+	1    5250 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L +3.3V #PWR07
+U 1 1 58DD41C1
+P 5000 1200
+F 0 "#PWR07" H 5000 1050 50  0001 C CNN
+F 1 "+3.3V" H 5000 1340 50  0000 C CNN
+F 2 "" H 5000 1200 50  0000 C CNN
+F 3 "" H 5000 1200 50  0000 C CNN
+	1    5000 1200
+	1    0    0    -1  
+$EndComp
+$Comp
+L +3.3V #PWR08
+U 1 1 58DD41E1
+P 5250 1200
+F 0 "#PWR08" H 5250 1050 50  0001 C CNN
+F 1 "+3.3V" H 5250 1340 50  0000 C CNN
+F 2 "" H 5250 1200 50  0000 C CNN
+F 3 "" H 5250 1200 50  0000 C CNN
+	1    5250 1200
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_01X04 P1
+U 1 1 58DD428A
+P 2550 2450
+F 0 "P1" H 2550 2700 50  0000 C CNN
+F 1 "CONN_01X04" V 2650 2450 50  0000 C CNN
+F 2 "TerminalBlock_Pheonix_MPT-2.54mm_4pol" H 2550 2450 50  0000 C CNN
+F 3 "" H 2550 2450 50  0000 C CNN
+	1    2550 2450
+	-1   0    0    -1  
+$EndComp
+$Comp
+L GND #PWR09
+U 1 1 58DD42F2
+P 2850 2700
+F 0 "#PWR09" H 2850 2450 50  0001 C CNN
+F 1 "GND" H 2850 2550 50  0000 C CNN
+F 2 "" H 2850 2700 50  0000 C CNN
+F 3 "" H 2850 2700 50  0000 C CNN
+	1    2850 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C5
+U 1 1 58DD4471
+P 5750 2000
+F 0 "C5" H 5775 2100 50  0000 L CNN
+F 1 "8p" H 5775 1900 50  0000 L CNN
+F 2 "C_0805" H 5788 1850 50  0000 C CNN
+F 3 "" H 5750 2000 50  0000 C CNN
+	1    5750 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R5
+U 1 1 58DD4557
+P 5500 2150
+F 0 "R5" V 5580 2150 50  0000 C CNN
+F 1 "68k" V 5500 2150 50  0000 C CNN
+F 2 "C_0805" V 5430 2150 50  0000 C CNN
+F 3 "" H 5500 2150 50  0000 C CNN
+	1    5500 2150
+	0    1    1    0   
+$EndComp
+$Comp
+L C C4
+U 1 1 58DD469D
+P 5700 2350
+F 0 "C4" H 5725 2450 50  0000 L CNN
+F 1 "8p" H 5725 2250 50  0000 L CNN
+F 2 "C_0805" H 5738 2200 50  0000 C CNN
+F 3 "" H 5700 2350 50  0000 C CNN
+	1    5700 2350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3400 2000 3400 1850
+Wire Wire Line
+	3200 1850 3400 1850
+Wire Wire Line
+	3400 1850 4250 1850
+Wire Wire Line
+	4250 1850 5750 1850
+Wire Wire Line
+	3200 1850 3200 2000
+Wire Wire Line
+	3200 2400 3200 2300
+Wire Wire Line
+	2750 2400 2850 2400
+Wire Wire Line
+	2850 2400 3200 2400
+Wire Wire Line
+	3200 2400 3400 2400
+Wire Wire Line
+	3400 2400 3550 2400
+Wire Wire Line
+	3400 2400 3400 2300
+Wire Wire Line
+	4250 1850 4250 2050
+Connection ~ 3400 1850
+Wire Wire Line
+	3550 2400 3550 2150
+Wire Wire Line
+	3550 2150 4250 2150
+Connection ~ 3400 2400
+Wire Wire Line
+	3950 1700 3950 2000
+Wire Wire Line
+	3950 2000 3950 2250
+Wire Wire Line
+	3950 2250 3950 2550
+Wire Wire Line
+	3950 2250 4250 2250
+Wire Wire Line
+	3950 1700 4250 1700
+Connection ~ 3950 2250
+Connection ~ 3200 2400
+Wire Wire Line
+	2750 2300 2850 2300
+Wire Wire Line
+	2850 2300 2850 2400
+Connection ~ 2850 2400
+Wire Wire Line
+	2850 2500 2850 2600
+Wire Wire Line
+	2850 2600 2850 2700
+Wire Wire Line
+	2850 2600 2750 2600
+Wire Wire Line
+	2750 2500 2850 2500
+Connection ~ 2850 2600
+Connection ~ 4250 1850
+Wire Wire Line
+	5150 2150 5200 2150
+Wire Wire Line
+	5200 2150 5300 2150
+Wire Wire Line
+	5300 2150 5350 2150
+Wire Wire Line
+	5200 2150 5200 1750
+Wire Wire Line
+	5200 1750 6250 1750
+Connection ~ 5200 2150
+Wire Wire Line
+	5650 2150 5700 2150
+Wire Wire Line
+	5700 2150 5750 2150
+Wire Wire Line
+	5700 2200 5700 2150
+Connection ~ 5700 2150
+Wire Wire Line
+	5150 2350 5250 2350
+Wire Wire Line
+	5250 2350 5250 2500
+Wire Wire Line
+	5250 2500 5500 2500
+Wire Wire Line
+	5500 2500 5700 2500
+$Comp
+L R R6
+U 1 1 58DD4928
+P 5500 2700
+F 0 "R6" V 5580 2700 50  0000 C CNN
+F 1 "5.6k" V 5500 2700 50  0000 C CNN
+F 2 "C_0805" V 5430 2700 50  0000 C CNN
+F 3 "" H 5500 2700 50  0000 C CNN
+	1    5500 2700
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5650 2850 5550 2850
+Wire Wire Line
+	5550 2850 5500 2850
+Wire Wire Line
+	5500 2550 5500 2500
+Connection ~ 5500 2500
+$Comp
+L R R4
+U 1 1 58DD4ACF
+P 5100 3050
+F 0 "R4" V 5180 3050 50  0000 C CNN
+F 1 "5.6k" V 5100 3050 50  0000 C CNN
+F 2 "C_0805" V 5030 3050 50  0000 C CNN
+F 3 "" H 5100 3050 50  0000 C CNN
+	1    5100 3050
+	-1   0    0    1   
+$EndComp
+$Comp
+L R R3
+U 1 1 58DD4B32
+P 5100 2650
+F 0 "R3" V 5180 2650 50  0000 C CNN
+F 1 "106k" V 5100 2650 50  0000 C CNN
+F 2 "C_0805" V 5030 2650 50  0000 C CNN
+F 3 "" H 5100 2650 50  0000 C CNN
+	1    5100 2650
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5100 2500 5200 2500
+Wire Wire Line
+	5200 2500 5200 2400
+Wire Wire Line
+	5200 2400 5300 2400
+Wire Wire Line
+	5300 2400 5300 2150
+Connection ~ 5300 2150
+Wire Wire Line
+	5150 2250 5350 2250
+Wire Wire Line
+	5350 2250 5350 2850
+Wire Wire Line
+	5350 2850 5100 2850
+Wire Wire Line
+	5100 2800 5100 2850
+Wire Wire Line
+	5100 2850 5100 2900
+Connection ~ 5100 2850
+$Comp
+L CONN_01X04 P2
+U 1 1 58DD50F7
+P 6900 2250
+F 0 "P2" H 6900 2500 50  0000 C CNN
+F 1 "CONN_01X04" V 7000 2250 50  0000 C CNN
+F 2 "TerminalBlock_Pheonix_MPT-2.54mm_4pol" H 6900 2250 50  0000 C CNN
+F 3 "" H 6900 2250 50  0000 C CNN
+	1    6900 2250
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	6250 1750 6250 2100
+Wire Wire Line
+	6250 2100 6700 2100
+$Comp
+L GND #PWR010
+U 1 1 58DD52DA
+P 6700 2300
+F 0 "#PWR010" H 6700 2050 50  0001 C CNN
+F 1 "GND" H 6700 2150 50  0000 C CNN
+F 2 "" H 6700 2300 50  0000 C CNN
+F 3 "" H 6700 2300 50  0000 C CNN
+	1    6700 2300
+	0    1    1    0   
+$EndComp
+$Comp
+L +3.3V #PWR011
+U 1 1 58DD5312
+P 6700 2200
+F 0 "#PWR011" H 6700 2050 50  0001 C CNN
+F 1 "+3.3V" H 6700 2340 50  0000 C CNN
+F 2 "" H 6700 2200 50  0000 C CNN
+F 3 "" H 6700 2200 50  0000 C CNN
+	1    6700 2200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR012
+U 1 1 58DD5379
+P 6700 2400
+F 0 "#PWR012" H 6700 2150 50  0001 C CNN
+F 1 "GND" H 6700 2250 50  0000 C CNN
+F 2 "" H 6700 2400 50  0000 C CNN
+F 3 "" H 6700 2400 50  0000 C CNN
+	1    6700 2400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5550 2850 5550 3200
+Wire Wire Line
+	5550 3200 5250 3200
+Wire Wire Line
+	5250 3200 5100 3200
+Connection ~ 5550 2850
+Wire Wire Line
+	5250 3200 5250 3350
+Wire Wire Line
+	5250 3350 5250 3450
+Wire Wire Line
+	5250 3450 5250 3600
+Connection ~ 5250 3200
+$Comp
+L C C6
+U 1 1 58DD59D8
+P 4900 3650
+F 0 "C6" H 4925 3750 50  0000 L CNN
+F 1 "100n" H 4925 3550 50  0000 L CNN
+F 2 "C_0805" H 4938 3500 50  0000 C CNN
+F 3 "" H 4900 3650 50  0000 C CNN
+	1    4900 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR013
+U 1 1 58DD5B04
+P 4900 3900
+F 0 "#PWR013" H 4900 3650 50  0001 C CNN
+F 1 "GND" H 4900 3750 50  0000 C CNN
+F 2 "" H 4900 3900 50  0000 C CNN
+F 3 "" H 4900 3900 50  0000 C CNN
+	1    4900 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4900 3900 4900 3800
+Wire Wire Line
+	4900 3500 4900 3450
+Wire Wire Line
+	4900 3450 5250 3450
+$Comp
+L LED-RESCUE-transimpedance D2
+U 1 1 58DD6110
+P 5250 3800
+F 0 "D2" H 5250 3900 50  0000 C CNN
+F 1 "GRN" H 5250 3700 50  0000 C CNN
+F 2 "C_0805" H 5250 3800 50  0000 C CNN
+F 3 "" H 5250 3800 50  0000 C CNN
+	1    5250 3800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR014
+U 1 1 58DD6195
+P 5250 4000
+F 0 "#PWR014" H 5250 3750 50  0001 C CNN
+F 1 "GND" H 5250 3850 50  0000 C CNN
+F 2 "" H 5250 4000 50  0000 C CNN
+F 3 "" H 5250 4000 50  0000 C CNN
+	1    5250 4000
+	1    0    0    -1  
+$EndComp
+Connection ~ 5250 3450
+$Comp
+L R R7
+U 1 1 58DD634D
+P 5650 3350
+F 0 "R7" V 5730 3350 50  0000 C CNN
+F 1 "10k" V 5650 3350 50  0000 C CNN
+F 2 "C_0805" V 5580 3350 50  0000 C CNN
+F 3 "" H 5650 3350 50  0000 C CNN
+	1    5650 3350
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5500 3350 5250 3350
+Connection ~ 5250 3350
+Wire Wire Line
+	5800 3550 5800 3350
+$Comp
+L +3.3V #PWR015
+U 1 1 58DD67E7
+P 5800 3550
+F 0 "#PWR015" H 5800 3400 50  0001 C CNN
+F 1 "+3.3V" H 5800 3690 50  0000 C CNN
+F 2 "" H 5800 3550 50  0000 C CNN
+F 3 "" H 5800 3550 50  0000 C CNN
+	1    5800 3550
+	0    1    1    0   
+$EndComp
+Text GLabel 5650 2850 2    60   Input ~ 0
+VGND
+Text GLabel 3900 2000 0    60   Input ~ 0
+VG1
+Wire Wire Line
+	3900 2000 3950 2000
+Connection ~ 3950 2000
+Text Notes 3000 750  0    60   ~ 0
+http://www.beis.de/Elektronik/Filter/ActiveHPFilter.html
+$Comp
+L D_Photo D?
+U 1 1 58DD9CAC
+P 1200 2550
+F 0 "D?" H 1220 2620 50  0000 L CNN
+F 1 "D_Photo" H 1160 2440 50  0000 C CNN
+F 2 "" H 1150 2550 50  0001 C CNN
+F 3 "" H 1150 2550 50  0001 C CNN
+	1    1200 2550
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 58DD9D7B
+P 1200 2650
+F 0 "#PWR?" H 1200 2400 50  0001 C CNN
+F 1 "GND" H 1200 2500 50  0000 C CNN
+F 2 "" H 1200 2650 50  0000 C CNN
+F 3 "" H 1200 2650 50  0000 C CNN
+	1    1200 2650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1200 2350 1200 2050
+Text Notes 850  4450 0    60   ~ 0
+When it gets brighter, it will push the signal low\nThe opamp will need to push signal higher.\n\nR1 bigger?  Increases noise.\nR1 smaller? Decreases signal.\nC1<< NIX C1!!!  Greatly increases high frequency gain.\n\nD1 controls reverse bias voltage.  Need to have enough headroom to operate and enough to bias the photodiode.
+$EndSCHEMATC
