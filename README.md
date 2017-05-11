@@ -1,6 +1,8 @@
 # esp8266lighthouse
 
-Internal notes:
+## Internal notes:
+
+```
 NOTES:
 TESTS Performed with no C1, TSV992
 Making R4 220k instead of 47k seeems to have little effect, but does make it worse.
@@ -42,3 +44,4 @@ BPW46: .247 / .968 / .61
 
 Winners: BPW46, BPW34/S-Z, BPW34FAS + VBPW34FASR
 Major Winners: BPW46/VBPW34FAS
+```
