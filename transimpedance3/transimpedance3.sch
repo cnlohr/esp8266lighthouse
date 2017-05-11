@@ -266,67 +266,67 @@ $EndComp
 $Comp
 L C C2
 U 1 1 58DD4042
-P 8350 1400
-F 0 "C2" H 8375 1500 50  0000 L CNN
-F 1 "10u" H 8375 1300 50  0000 L CNN
-F 2 "C_0805" H 8100 1400 50  0000 C CNN
-F 3 "" H 8350 1400 50  0000 C CNN
-	1    8350 1400
+P 2400 1150
+F 0 "C2" H 2425 1250 50  0000 L CNN
+F 1 "10u" H 2425 1050 50  0000 L CNN
+F 2 "C_0805" H 2150 1150 50  0000 C CNN
+F 3 "" H 2400 1150 50  0000 C CNN
+	1    2400 1150
 	1    0    0    -1  
 $EndComp
 $Comp
 L C C3
 U 1 1 58DD40AE
-P 8600 1400
-F 0 "C3" H 8625 1500 50  0000 L CNN
-F 1 "10n" H 8625 1300 50  0000 L CNN
-F 2 "C_0805" H 8638 1250 50  0000 C CNN
-F 3 "" H 8600 1400 50  0000 C CNN
-	1    8600 1400
+P 2650 1150
+F 0 "C3" H 2675 1250 50  0000 L CNN
+F 1 "10n" H 2675 1050 50  0000 L CNN
+F 2 "C_0805" H 2688 1000 50  0000 C CNN
+F 3 "" H 2650 1150 50  0000 C CNN
+	1    2650 1150
 	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR05
 U 1 1 58DD4181
-P 8350 1550
-F 0 "#PWR05" H 8350 1300 50  0001 C CNN
-F 1 "GND" H 8350 1400 50  0000 C CNN
-F 2 "" H 8350 1550 50  0000 C CNN
-F 3 "" H 8350 1550 50  0000 C CNN
-	1    8350 1550
+P 2400 1300
+F 0 "#PWR05" H 2400 1050 50  0001 C CNN
+F 1 "GND" H 2400 1150 50  0000 C CNN
+F 2 "" H 2400 1300 50  0000 C CNN
+F 3 "" H 2400 1300 50  0000 C CNN
+	1    2400 1300
 	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR06
 U 1 1 58DD41A1
-P 8600 1550
-F 0 "#PWR06" H 8600 1300 50  0001 C CNN
-F 1 "GND" H 8600 1400 50  0000 C CNN
-F 2 "" H 8600 1550 50  0000 C CNN
-F 3 "" H 8600 1550 50  0000 C CNN
-	1    8600 1550
+P 2650 1300
+F 0 "#PWR06" H 2650 1050 50  0001 C CNN
+F 1 "GND" H 2650 1150 50  0000 C CNN
+F 2 "" H 2650 1300 50  0000 C CNN
+F 3 "" H 2650 1300 50  0000 C CNN
+	1    2650 1300
 	1    0    0    -1  
 $EndComp
 $Comp
 L +3.3V #PWR07
 U 1 1 58DD41C1
-P 8350 1250
-F 0 "#PWR07" H 8350 1100 50  0001 C CNN
-F 1 "+3.3V" H 8350 1390 50  0000 C CNN
-F 2 "" H 8350 1250 50  0000 C CNN
-F 3 "" H 8350 1250 50  0000 C CNN
-	1    8350 1250
+P 2400 1000
+F 0 "#PWR07" H 2400 850 50  0001 C CNN
+F 1 "+3.3V" H 2400 1140 50  0000 C CNN
+F 2 "" H 2400 1000 50  0000 C CNN
+F 3 "" H 2400 1000 50  0000 C CNN
+	1    2400 1000
 	1    0    0    -1  
 $EndComp
 $Comp
 L +3.3V #PWR08
 U 1 1 58DD41E1
-P 8600 1250
-F 0 "#PWR08" H 8600 1100 50  0001 C CNN
-F 1 "+3.3V" H 8600 1390 50  0000 C CNN
-F 2 "" H 8600 1250 50  0000 C CNN
-F 3 "" H 8600 1250 50  0000 C CNN
-	1    8600 1250
+P 2650 1000
+F 0 "#PWR08" H 2650 850 50  0001 C CNN
+F 1 "+3.3V" H 2650 1140 50  0000 C CNN
+F 2 "" H 2650 1000 50  0000 C CNN
+F 3 "" H 2650 1000 50  0000 C CNN
+	1    2650 1000
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -576,7 +576,7 @@ $EndComp
 Text Notes 2000 6000 0    60   ~ 0
 NOTES:\nTESTS Performed with no C1, TSV992\nMaking R4 220k instead of 47k seeems to have little effect, but does make it worse.\nSwitching R1 for 47k just makes it appear drunk. There's some weird feedback thing going on.\n    Like it tuned wrong or something.   Making it 10k quiets the signal a lot.\nREMOVING C4 no apparent impact.\n\nR5=10k, C5=10p -> R5=4.7k, C5=18p =>> Improvement.\nAdding C1=1pF decreases amplitude a little bit but also cleans up edges.\nRemoving C6 seems to reduce amplitude slightly.\n\nFar peak:\nC1 none C6 none => .1238V noise, .998V Far Light\nC1 none C6 1pF    => .1238V noise, .498V Far Light\nC1 1pF  C6 none => .1135V noise, .358V Far Light\nC1 1pF C6 1pF     => .087V Noise, .202V Far Light\n\nRecommendation: Remove C6, C1.\n\nOut of the following op amps...\nTSH82, TSV992, AD8052, TSH22, TSH462,\nTSV992 demolished.
 Text Notes 6900 5650 0    60   ~ 0
-PART / NOISE / FAR / Cost\nPD70-01C/TR7:  .159 / .418 / .47\nPD438C: .237 / .550 / .39\nQSD2030F: .216 / .5363 / .30\nBPW34/S-Z: .283 / .6345 /.497\nPD15-216/TR8: UNUSABLE\nBPW34FAS: .175 / .815 / Obsolete?\nVBPW34FASR: .2631 / .644 / .778\nBPW34: .237 / .577 / .62\nPD15-22C/TR8: Unworkable.\nPD15-22B/TR8: Unworkable.\nPD70-TR10: .2063 / .4024 / .41\nBPW46: .247 / .968 / .61\n\nWinners: BPW46, BPW34/S-Z, BPW34FAS + VBPW34FASR\nMajor Winners: BPW46/VBPW34FAS
+PART / NOISE / FAR / Cost\nPD70-01C/TR7:  .159 / .418 / .47\nPD438C: .237 / .550 / .39\nQSD2030F: .216 / .5363 / .30\nBPW34/S-Z: .283 / .6345 /.497\nPD15-216/TR8: UNUSABLE\nVBPW34FAS: .175 / .815 / .778\nVBPW34FASR: .2631 / .644 / .778\nBPW34: .237 / .577 / .62\nPD15-22C/TR8: Unworkable.\nPD15-22B/TR8: Unworkable.\nPD70-TR10: .2063 / .4024 / .41\nBPW46: .247 / .968 / .61\n\nWinners: BPW46, BPW34/S-Z, BPW34FAS + VBPW34FASR\nMajor Winners: BPW46/VBPW34FAS
 Text Notes 2000 2050 0    60   ~ 0
 BPW46 or VBPW34FAS
 Wire Wire Line
