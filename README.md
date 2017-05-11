@@ -3,7 +3,7 @@
 ## Internal notes:
 
 ```
-NOTES:
+NOTES for transimpedence2/3
 TESTS Performed with no C1, TSV992
 Making R4 220k instead of 47k seeems to have little effect, but does make it worse.
 Switching R1 for 47k just makes it appear drunk. There's some weird feedback thing going on.
