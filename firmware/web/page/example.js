@@ -7,9 +7,9 @@ var menItm = `
 	<tr><td width=1><input type=submit onclick="ShowHideEvent( 'Lighthouse' );" value="Lighthouse"></td><td>
 	<div id=Lighthouse class="collapsible">
 		<input type=button id=InfoBtn value="Pull Frame">
-		<div style="overflow-x: scroll;width:500">
+		<div style="overflow-x: scroll;width:800">
 			<div id="packetstatus"></div>
-			<canvas id="packetcanvas" width=500 height=100></canvas>
+			<canvas id="packetcanvas" width=800 height=100></canvas>
 		</div>
 		<textarea id="packetraw" rows="1" cols="20" wrap="off"></textarea>
     </div>
