@@ -2,6 +2,7 @@
 
 #include <commonservices.h>
 #include <esp82xxutil.h>
+#include "lighthouse_decode.h"
 
 void ICACHE_FLASH_ATTR ReinitSettings()
 {
@@ -21,6 +22,23 @@ int ICACHE_FLASH_ATTR CustomCommand(char * buffer, int retsize, char *pusrdata, 
 	case 'C': case 'c': //Custom command test
 	{
 		buffend += ets_sprintf( buffend, "CC" );
+		return buffend-buffer;
+	}
+	case 'P': case 'p': //Get last packet
+	{
+		buffend += ets_sprintf( buffend, "CP\t%d\t%d", lighthousebufferflag,lighthousebufferlen );
+		if( lighthousebufferflag == 2 )
+		{
+			int k;
+			buffend+= ets_sprintf( buffend, "\t" );
+			int tsend = lighthousebufferlen;
+			if( tsend > 150 ) tsend = 150;
+			for ( k = 0; k < tsend; k++ )
+			{
+				buffend += ets_sprintf( buffend, "%08x", lighthousebuffer[k] );
+			}
+			lighthousebufferflag = 0;
+		}
 		return buffend-buffer;
 	}
 	}

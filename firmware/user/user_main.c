@@ -50,7 +50,7 @@ static void ICACHE_FLASH_ATTR procTask(os_event_t *events)
 static void ICACHE_FLASH_ATTR myTimer(void *arg)
 {
 	//printf( "%d %d %d %08x %08x\n", fxcycle, etx, erx, i2sBDRX[0], i2sBDRX[I2SDMABUFLEN-1] );
-	uart0_sendStr("X");
+	//uart0_sendStr("X");
 
 	CSTick( 1 );
 }
@@ -62,7 +62,7 @@ udpserver_recv(void *arg, char *pusrdata, unsigned short len)
 {
 	struct espconn *pespconn = (struct espconn *)arg;
 
-	uart0_sendStr("X");
+	//uart0_sendStr("X");
 }
 
 void ICACHE_FLASH_ATTR charrx( uint8_t c )
@@ -113,7 +113,6 @@ void ICACHE_FLASH_ATTR user_init(void)
 	os_timer_disarm(&some_timer);
 	os_timer_setfn(&some_timer, (os_timer_func_t *)myTimer, NULL);
 	os_timer_arm(&some_timer, 100, 1);
-	wifi_set_opmode_current(0);
 
 	//Configure 
 	testi2s_init();
@@ -126,8 +125,7 @@ void ICACHE_FLASH_ATTR user_init(void)
 
 	//Configure the charge pump pins.
 
-
-	system_update_cpu_freq( SYS_CPU_80MHZ );
+	system_update_cpu_freq( SYS_CPU_160MHZ );
 
 	system_os_post(procTaskPrio, 0, 0 );
 }
@@ -143,3 +141,35 @@ void ExitCritical()
 }
 
 
+//For SDK 2.0.0 only.
+uint32 ICACHE_FLASH_ATTR user_rf_cal_sector_set(void)
+{
+    enum flash_size_map size_map = system_get_flash_size_map();
+    uint32 rf_cal_sec = 0;
+
+    switch (size_map) {
+        case FLASH_SIZE_4M_MAP_256_256:
+            rf_cal_sec = 128 - 8;
+            break;
+
+        case FLASH_SIZE_8M_MAP_512_512:
+            rf_cal_sec = 256 - 5;
+            break;
+
+        case FLASH_SIZE_16M_MAP_512_512:
+        case FLASH_SIZE_16M_MAP_1024_1024:
+            rf_cal_sec = 512 - 5;
+            break;
+
+        case FLASH_SIZE_32M_MAP_512_512:
+        case FLASH_SIZE_32M_MAP_1024_1024:
+            rf_cal_sec = 1024 - 5;
+            break;
+
+        default:
+            rf_cal_sec = 0;
+            break;
+    }
+
+    return rf_cal_sec;
+}

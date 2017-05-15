@@ -8,12 +8,12 @@
 #include "i2sduplex.h"
 #include <commonservices.h>
 #include <esp82xxutil.h>
-
+#include "lighthouse_decode.h"
 
 
 //These contol the speed at which the bus comms.
 #define WS_I2S_BCK 2  //Can't be less than 1.
-#define WS_I2S_DIV 2
+#define WS_I2S_DIV 1
 
 //I2S DMA buffer descriptors
 static struct sdio_queue i2sBufDescRX[DMABUFFERDEPTH];
@@ -26,6 +26,7 @@ int erx, etx;
 LOCAL void slc_isr(void) {
 	//portBASE_TYPE HPTaskAwoken=0;
 	struct sdio_queue *finishedDesc;
+	static struct sdio_queue * lasttxdesc;
 	uint32 slc_intr_status;
 	int x;
 	fxcycle++;
@@ -37,13 +38,18 @@ LOCAL void slc_isr(void) {
 //printf( "%08x\n", slc_intr_status );
 	if ( (slc_intr_status & SLC_RX_EOF_INT_ST))
 	{
-		finishedDesc=(struct sdio_queue*)READ_PERI_REG(SLC_RX_EOF_DES_ADDR);
+		lasttxdesc=(struct sdio_queue*)READ_PERI_REG(SLC_RX_EOF_DES_ADDR);
 
 		etx++;	//I know it's wacky, but the nomeclature is backwards, this is for TX packets in here.
 	}
 	if ( (slc_intr_status & SLC_TX_EOF_INT_ST))
 	{
+		static int k;
 		finishedDesc=(struct sdio_queue*)READ_PERI_REG(SLC_TX_EOF_DES_ADDR);
+		uint32_t * data = (uint32_t*)finishedDesc->buf_ptr;
+		lighthouse_decode( data, I2SDMABUFLEN );
+		finishedDesc->owner=1;
+
 /*
 		uint32_t * data = finishedDesc->buf_ptr;
 		int i;
