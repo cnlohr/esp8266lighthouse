@@ -9,6 +9,7 @@
 #include "espconn.h"
 #include "i2sduplex.h"
 #include <commonservices.h>
+#include "lighthouse_decode.h"
 #include <esp82xxutil.h>
 #include <mdns.h>
 
@@ -28,9 +29,14 @@ void user_rf_pre_init(void)
 	//nothing.
 }
 
+
+
 char * strcat( char * dest, char * src )
 {
-	return strcat(dest, src );
+    char *rdest = dest;
+    while (*dest) dest++;
+    while (*dest++ = *src++);
+    return rdest;
 }
 
 
@@ -46,11 +52,34 @@ static void ICACHE_FLASH_ATTR procTask(os_event_t *events)
 	system_os_post(procTaskPrio, 0, 0 );
 }
 
+remot_info *premot_udp = NULL;
+
+int SendPacket( uint32_t * data, int size )
+{
+	if( premot_udp )
+	{
+		pUdpServer->proto.udp->remote_port = premot_udp->remote_port;
+		pUdpServer->proto.udp->remote_ip[0] = premot_udp->remote_ip[0];
+		pUdpServer->proto.udp->remote_ip[1] = premot_udp->remote_ip[1];
+		pUdpServer->proto.udp->remote_ip[2] = premot_udp->remote_ip[2];
+		pUdpServer->proto.udp->remote_ip[3] = premot_udp->remote_ip[3];
+		data[0]--;
+		espconn_sendto(pUdpServer, (char*)data, size*4 );
+		data[0]++;
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
 //Timer event.
 static void ICACHE_FLASH_ATTR myTimer(void *arg)
 {
 	//printf( "%d %d %d %08x %08x\n", fxcycle, etx, erx, i2sBDRX[0], i2sBDRX[I2SDMABUFLEN-1] );
 	//uart0_sendStr("X");
+
 
 	CSTick( 1 );
 }
@@ -61,8 +90,9 @@ static void ICACHE_FLASH_ATTR
 udpserver_recv(void *arg, char *pusrdata, unsigned short len)
 {
 	struct espconn *pespconn = (struct espconn *)arg;
-
-	//uart0_sendStr("X");
+	espconn_get_connection_info(pespconn,&premot_udp,0);
+	lighthousebufferflag = 0;
+	uart0_sendStr("X");
 }
 
 void ICACHE_FLASH_ATTR charrx( uint8_t c )
@@ -92,6 +122,7 @@ void ICACHE_FLASH_ATTR user_init(void)
 	pUdpServer->proto.udp = (esp_udp *)os_zalloc(sizeof(esp_udp));
 	pUdpServer->proto.udp->local_port = 7777;
 	espconn_regist_recvcb(pUdpServer, udpserver_recv);
+	espconn_set_opt(pUdpServer, 0x04); // enable write buffer
 
 	if( espconn_create( pUdpServer ) )
 	{
@@ -100,7 +131,7 @@ void ICACHE_FLASH_ATTR user_init(void)
 
 	CSInit();
 
-	SetServiceName( "i2sdup" );
+	SetServiceName( "lighthouse" );
 	AddMDNSName( "cn8266" );
 	AddMDNSName( "ws2812" );
 	AddMDNSService( "_http._tcp", "An ESP8266 Webserver", 80 );

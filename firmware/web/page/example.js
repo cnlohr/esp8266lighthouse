@@ -10,8 +10,9 @@ var menItm = `
 		<div style="overflow-x: scroll;width:500">
 			<div id="packetstatus"></div>
 			<canvas id="packetcanvas" width=500 height=100></canvas>
-			<textarea id="packetraw" rows="1" cols="20" wrap="off">
 		</div>
+		<textarea id="packetraw" rows="1" cols="20" wrap="off"></textarea>
+    </div>
 	</td></tr>
 `;
 	$('#MainMenu > tbody:last').after( menItm );

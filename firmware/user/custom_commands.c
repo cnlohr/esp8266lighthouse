@@ -4,6 +4,8 @@
 #include <esp82xxutil.h>
 #include "lighthouse_decode.h"
 
+extern remot_info *premot_udp;
+
 void ICACHE_FLASH_ATTR ReinitSettings()
 {
 }
@@ -26,14 +28,15 @@ int ICACHE_FLASH_ATTR CustomCommand(char * buffer, int retsize, char *pusrdata, 
 	}
 	case 'P': case 'p': //Get last packet
 	{
-		buffend += ets_sprintf( buffend, "CP\t%d\t%d", lighthousebufferflag,lighthousebufferlen );
+		buffend += ets_sprintf( buffend, "CP\t%d\t%d", lighthousebufferflag,lighthousebufferlen-1 );
+		premot_udp = 0;
 		if( lighthousebufferflag == 2 )
 		{
 			int k;
 			buffend+= ets_sprintf( buffend, "\t" );
-			int tsend = lighthousebufferlen;
+			int tsend = lighthousebufferlen-1;
 			if( tsend > 150 ) tsend = 150;
-			for ( k = 0; k < tsend; k++ )
+			for ( k = 1; k <= tsend; k++ )
 			{
 				buffend += ets_sprintf( buffend, "%08x", lighthousebuffer[k] );
 			}
