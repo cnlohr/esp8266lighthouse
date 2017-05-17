@@ -30,7 +30,7 @@ void lighthouse_decode( uint32_t * data, int size_words )
 		{
 			if( lighthousebufferflag == 1 )
 			{
-				if( lighthousebufferlen < 3 )
+				if( lighthousebufferlen < 5 )
 				{
 					lighthousebufferflag = 0;
 					lighthousebufferlen = 1;

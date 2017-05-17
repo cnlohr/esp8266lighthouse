@@ -3,6 +3,7 @@
 #include <commonservices.h>
 #include <esp82xxutil.h>
 #include "lighthouse_decode.h"
+#include <string.h>
 
 extern remot_info *premot_udp;
 
@@ -35,10 +36,15 @@ int ICACHE_FLASH_ATTR CustomCommand(char * buffer, int retsize, char *pusrdata, 
 			int k;
 			buffend+= ets_sprintf( buffend, "\t" );
 			int tsend = lighthousebufferlen-1;
-			if( tsend > 150 ) tsend = 150;
-			for ( k = 1; k <= tsend; k++ )
+			if( tsend > 300 ) tsend = 300;
+			//ets_memcpy( buffend, lighthousebuffer, tsend );
+			for( k = 1; k <= tsend; k++ )
 			{
-				buffend += ets_sprintf( buffend, "%08x", lighthousebuffer[k] );
+				uint32_t r = lighthousebuffer[k];
+				*(buffend++) = r>>24;
+				*(buffend++) = r>>16;
+				*(buffend++) = r>>8;
+				*(buffend++) = r;
 			}
 			lighthousebufferflag = 0;
 		}

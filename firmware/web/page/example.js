@@ -29,60 +29,76 @@ window.addEventListener("load", initLighthouse, false);
 
 var vtext = "";
 
-// Handle request previously sent on button click
-function clbInfoBtn(req,data) {
-	$('#InfoBtn').val('Display Info');
-	var pars = data.split("\t");
-	if( pars.length == 4 )
+function popParam( dataarr )
+{
+	var i = 0;
+	for( i = 0; i < dataarr[0].length; i++ )
 	{
-		var State = Number( pars[1] );
-		var Size = Number( pars[2] );
+		var c = dataarr[0].charAt(i);
+		if( c == '\t' ) break;
+	}
+	var popped = dataarr[0].substr(0,i);
+	dataarr[0] = dataarr[0].substr( i+1 );
+	return popped;
+}
 
-		if( State == 2 )
+// Handle request previously sent on button click
+function clbInfoBtn(req,data,rawdat) {
+	$('#InfoBtn').val('Display Info');
+	var dataarr = [data];
+
+	var cmd = popParam( dataarr );
+	var State = popParam( dataarr );
+	var Size = popParam( dataarr );
+
+	if( State == 2 )
+	{
+		var Data = [];
+		var rawdat = dataarr[0];
+		for (var i = 0; i < rawdat.length;﻿ i++)
 		{
-			var Data = [];
-			var hex = pars[3];
-			for (var i = 0; i < hex.length;﻿ i++)
-			{
-				var d = parseInt(hex.substr(i, 1), 16);
-				Data.push( (d & 8) != 0 );
-				Data.push( (d & 4) != 0 );
-				Data.push( (d & 2) != 0 );
-				Data.push( (d & 1) != 0 );
-			}
-			$('#packetstatus').html( "Words: " + Size );
-			var canvwid = Data.length; //$("#packetcanvas").width();
-			var canvhei = 100;
+			var d = rawdat.charCodeAt(i);
+			Data.push( (d & 128) != 0 );
+			Data.push( (d & 64) != 0 );
+			Data.push( (d & 32) != 0 );
+			Data.push( (d & 16) != 0 );
+			Data.push( (d & 8) != 0 );
+			Data.push( (d & 4) != 0 );
+			Data.push( (d & 2) != 0 );
+			Data.push( (d & 1) != 0 );
+		}
+		$('#packetstatus').html( "Words: " + Size );
+		var canvwid = Data.length; //$("#packetcanvas").width();
+		var canvhei = 100;
 //( canvwid, canvhei );
-			var ctx = $("#packetcanvas")[0].getContext("2d");
-			ctx.height = canvhei;
-			ctx.width = canvwid;
-			$("#packetcanvas")[0].width = canvwid;
+		var ctx = $("#packetcanvas")[0].getContext("2d");
+		ctx.height = canvhei;
+		ctx.width = canvwid;
+		$("#packetcanvas")[0].width = canvwid;
 
 /* To allow overlaying, do this code.
-			if( ctx.width != 6000 )
-			{
-				ctx.width = 6000;
-				$("#packetcanvas")[0].width = 6000;
-			}
-*/
-			var bypp = Data.length / canvwid;
-			ctx.beginPath();
-			ctx.moveTo(0,0);
-			var i = 0;
-			for( var x = 0; i < Data.length; x+=bypp )
-			{
-				var y = Data[i++]?10:canvhei-50;
-				ctx.lineTo(x, y);
-			}
-			ctx.stroke();
-
-			for( i = 0; i < Data.length; i++ )
-			{
-				vtext += Data[i]?'1':'0';
-			}
-			vtext+="\n";
-			$("#packetraw").text( vtext );
+		if( ctx.width != 6000 )
+		{
+			ctx.width = 6000;
+			$("#packetcanvas")[0].width = 6000;
 		}
+*/
+		var bypp = Data.length / canvwid;
+		ctx.beginPath();
+		ctx.moveTo(0,0);
+		var i = 0;
+		for( var x = 0; i < Data.length; x+=bypp )
+		{
+			var y = Data[i++]?10:canvhei-50;
+			ctx.lineTo(x, y);
+		}
+		ctx.stroke();
+
+		for( i = 0; i < Data.length; i++ )
+		{
+			vtext += Data[i]?'1':'0';
+		}
+		vtext+="\n";
+		$("#packetraw").text( vtext );
 	}
 }
