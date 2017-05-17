@@ -7,7 +7,7 @@ var menItm = `
 	<tr><td width=1><input type=submit onclick="ShowHideEvent( 'Lighthouse' );" value="Lighthouse"></td><td>
 	<div id=Lighthouse class="collapsible">
 		<input type=button id=InfoBtn value="Pull Frame">
-		<div style="overflow-x: scroll;width:800">
+		<div style="overflow-x: scroll; width: 800px">
 			<div id="packetstatus"></div>
 			<canvas id="packetcanvas" width=800 height=100></canvas>
 		</div>
