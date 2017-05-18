@@ -49,6 +49,6 @@ int main()
 		uint32_t average_numerator = Read32();
 		uint32_t firsttransition = Read32();
 
-		printf( "%10u\t%5u\t%10.2f\t%10.2f\n", firsttransition, full_length, (average_numerator)*1.0/strength, 2.0 * 40000000.0 * freq_denom / freq_num );
+		printf( "%10u\t%5u\t%10.2f\t%10.2f\t%5d\n", firsttransition, full_length, (average_numerator)*1.0/strength, 2.0 * 40000000.0 * freq_denom / freq_num,strength );
 	}
 }
