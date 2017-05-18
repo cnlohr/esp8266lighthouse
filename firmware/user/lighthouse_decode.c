@@ -130,9 +130,6 @@ void lighthouse_decode( uint32_t * data, int size_words )
 					int edgecount = LHSM.edgetimeshead - LHSM.edgetimesbase;
 					LHSM.edgecount = edgecount;
 
-					printf( "%d\n", edgecount );
-
-					LHSM.debugbufferbase[0] = LHSM.debugbufferlen;
 					if( !LHSM.debugmonitoring || SendPacket( LHSM.debugbufferbase, LHSM.debugbufferlen ) == 0 )
 					{
 						LHSM.debugbufferflag = 0;

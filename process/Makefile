@@ -1,11 +1,11 @@
-all : process clocking
+all : process lighthouse_clocking
 
 process : process.c
 	gcc -o $@ $^
 
-clocking : clocking.c
+lighthouse_clocking : lighthouse_clocking.c
 	gcc -o $@ $^
 
 clean :
-	rm -rf *.o *~ clocking process
+	rm -rf *.o *~ lighthouse_clocking process
 

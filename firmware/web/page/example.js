@@ -20,7 +20,7 @@ var menItm = `
 	$('#InfoBtn').click( function(e) {
 		$('#InfoBtn').val('Getting data...');
 		$('#InfoDspl').html('&nbsp;');
-		QueueOperation( "CP", clbInfoBtn ); // Send info request to ESP
+		QueueOperation( "CE", clbInfoBtn ); // Send info request to ESP
 	});
 }
 
@@ -42,8 +42,37 @@ function popParam( dataarr )
 	return popped;
 }
 
-// Handle request previously sent on button click
 function clbInfoBtn(req,data,rawdat) {
+	$('#InfoBtn').val('Re-get');
+	var dataarr = [data];
+
+	var cmd = popParam( dataarr );
+	var State = popParam( dataarr );
+	var Size = popParam( dataarr );
+	console.log( cmd + " " + State + " " + Size );
+
+	var Edges = [];
+
+	vtext = "";
+	var rawdat = dataarr[0];
+	var firstedge = 0;
+	for (var i = 0; i < rawdat.length;﻿ i+=4)
+	{
+		var d = rawdat.charCodeAt(i+0)<<24;
+		d |= rawdat.charCodeAt(i+1)<<16;
+		d |= rawdat.charCodeAt(i+2)<<8;
+		d |= rawdat.charCodeAt(i+3)<<0;
+		Edges.push( d )
+		vtext += d + "\n";
+	}
+
+	$("#packetraw").text( vtext );
+
+	QueueOperation( "CP", callbackCP ); // Send info request to ESP
+}
+
+// Handle request previously sent on button click
+function callbackCP(req,data,rawdat) {
 	$('#InfoBtn').val('Display Info');
 	var dataarr = [data];
 
@@ -93,12 +122,13 @@ function clbInfoBtn(req,data,rawdat) {
 			ctx.lineTo(x, y);
 		}
 		ctx.stroke();
-
+/*
 		for( i = 0; i < Data.length; i++ )
 		{
 			vtext += Data[i]?'1':'0';
 		}
 		vtext+="\n";
 		$("#packetraw").text( vtext );
+*/
 	}
 }
