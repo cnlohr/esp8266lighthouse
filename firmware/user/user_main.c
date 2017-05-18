@@ -80,7 +80,8 @@ udpserver_recv(void *arg, char *pusrdata, unsigned short len)
 {
 	struct espconn *pespconn = (struct espconn *)arg;
 	espconn_get_connection_info(pespconn,&premot_udp,0);
-	lighthousebufferflag = 0;
+	LHSM.debugbufferflag = 0;
+	LHSM.debugmonitoring = 1;
 	uart0_sendStr("X");
 }
 
@@ -103,6 +104,9 @@ void ICACHE_FLASH_ATTR user_init(void)
 
 	CSSettingsLoad( 0 );
 	CSPreInit();
+
+	//Configure buffers
+	lighthouse_setup();
 
     pUdpServer = (struct espconn *)os_zalloc(sizeof(struct espconn));
 	ets_memset( pUdpServer, 0, sizeof( struct espconn ) );

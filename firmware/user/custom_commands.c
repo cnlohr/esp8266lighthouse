@@ -27,26 +27,51 @@ int ICACHE_FLASH_ATTR CustomCommand(char * buffer, int retsize, char *pusrdata, 
 		buffend += ets_sprintf( buffend, "CC" );
 		return buffend-buffer;
 	}
-	case 'P': case 'p': //Get last packet
+	case 'E': case 'e': //Get edges (does not advance packet)
 	{
-		buffend += ets_sprintf( buffend, "CP\t%d\t%d", lighthousebufferflag,lighthousebufferlen-1 );
+		LHSM.debugmonitoring = 1;
+		buffend += ets_sprintf( buffend, "CE\t%d\t%d",LHSM.debugbufferflag,LHSM.edgecount );
 		premot_udp = 0;
-		if( lighthousebufferflag == 2 )
+		if( LHSM.debugbufferflag == 2 )
 		{
-			int k;
 			buffend+= ets_sprintf( buffend, "\t" );
-			int tsend = lighthousebufferlen-1;
+			int k;
+
+			int tsend = LHSM.edgecount;
 			if( tsend > 300 ) tsend = 300;
 			//ets_memcpy( buffend, lighthousebuffer, tsend );
-			for( k = 1; k <= tsend; k++ )
+			for( k = 0; k <= tsend; k++ )
 			{
-				uint32_t r = lighthousebuffer[k];
+				uint32_t r = LHSM.debugbufferbase[k];
 				*(buffend++) = r>>24;
 				*(buffend++) = r>>16;
 				*(buffend++) = r>>8;
 				*(buffend++) = r;
 			}
-			lighthousebufferflag = 0;
+		}
+		return buffend - buffer;
+	}
+	case 'P': case 'p': //Get last packet (advances packet)
+	{
+		LHSM.debugmonitoring = 1;
+		buffend += ets_sprintf( buffend, "CP\t%d\t%d",LHSM.debugbufferflag,LHSM.debugbufferlen-1 );
+		premot_udp = 0;
+		if( LHSM.debugbufferflag == 2 )
+		{
+			int k;
+			buffend+= ets_sprintf( buffend, "\t" );
+			int tsend = LHSM.debugbufferlen;
+			if( tsend > 300 ) tsend = 300;
+			//ets_memcpy( buffend, lighthousebuffer, tsend );
+			for( k = 0; k <= tsend; k++ )
+			{
+				uint32_t r = LHSM.debugbufferbase[k];
+				*(buffend++) = r>>24;
+				*(buffend++) = r>>16;
+				*(buffend++) = r>>8;
+				*(buffend++) = r;
+			}
+			LHSM.debugbufferflag = 0;
 		}
 		return buffend-buffer;
 	}
