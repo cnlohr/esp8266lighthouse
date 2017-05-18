@@ -17,16 +17,14 @@
 
 //I2S DMA buffer descriptors
 static struct sdio_queue i2sBufDescRX[DMABUFFERDEPTH];
-static struct sdio_queue i2sBufDescTX[DMABUFFERDEPTH];
 uint32_t i2sBDRX[I2SDMABUFLEN*DMABUFFERDEPTH];
-uint32_t i2sBDTX[I2SDMABUFLEN*DMABUFFERDEPTH];
 int fxcycle;
 int erx, etx;
 
 LOCAL void slc_isr(void) {
 	//portBASE_TYPE HPTaskAwoken=0;
 	struct sdio_queue *finishedDesc;
-	static struct sdio_queue * lasttxdesc;
+	static struct sdio_queue * lastrxdesc;
 	uint32 slc_intr_status;
 	int x;
 	fxcycle++;
@@ -35,55 +33,31 @@ LOCAL void slc_isr(void) {
 	//clear all intr flags
 	WRITE_PERI_REG(SLC_INT_CLR, 0xffffffff);//slc_intr_status);
 
-//printf( "%08x\n", slc_intr_status );
-	if ( (slc_intr_status & SLC_RX_EOF_INT_ST))
-	{
-		lasttxdesc=(struct sdio_queue*)READ_PERI_REG(SLC_RX_EOF_DES_ADDR);
-
-		etx++;	//I know it's wacky, but the nomeclature is backwards, this is for TX packets in here.
-	}
 	if ( (slc_intr_status & SLC_TX_EOF_INT_ST))
 	{
 		static int k;
 		finishedDesc=(struct sdio_queue*)READ_PERI_REG(SLC_TX_EOF_DES_ADDR);
-		uint32_t * data = (uint32_t*)finishedDesc->buf_ptr;
-		lighthouse_decode( data, I2SDMABUFLEN );
-		finishedDesc->owner=1;
 
-/*
-		uint32_t * data = finishedDesc->buf_ptr;
-		int i;
-		for( i = 0; i < I2SDMABUFLEN; i++ )
-		{
-			printf( "%1d", data[i]>>31 );
+		struct sdio_queue * desc;
+
+		int trycount = 0;
+
+		desc = &i2sBufDescRX[k];
+
+		//XX TODO: THIS IS WRONG WRONG WRONG XXX XXX SOMETIMES IT SPINS THE WHOLE WAY ROUND NEEDLESSLY.
+		//Tricky: If we undreflow handle it carefully.
+		while( desc != finishedDesc ) {
+			desc = &i2sBufDescRX[k++];
+			if( k == DMABUFFERDEPTH ) k = 0;
+
+			uint32_t * data = (uint32_t*)desc->buf_ptr;
+			lighthouse_decode( data, I2SDMABUFLEN );
+			desc->owner=1;
+			trycount++;
 		}
+		//XXX TODO: Consider what could be causing the major delays.
 
-		//finishedDesc=finishedDesc->next_link_ptr;
-
-		//Don't know why - but this MUST be done, otherwise everything comes to a screeching halt.
-		finishedDesc->owner=1;
-
-		//Nomaclature weird. this is actually RX packets.
-		erx++;
-*/
-
-/*
-		static int chargepumpcount = 0;
-		static int chargepumpstate = 0;
-		if( chargepumpcount++ == 10 )
-		{
-			chargepumpcount = 0;
-			chargepumpstate ++;
-			if( chargepumpstate == 4 ) chargepumpstate = 0;
-		}
-		switch( chargepumpstate )
-		{
-		case 0: PIN_OUT_SET = _BV(13) | _BV(14); break;
-		case 1: PIN_OUT_CLEAR = _BV(13); break;
-		case 2: PIN_OUT_SET = _BV(13); break;
-		default: PIN_OUT_CLEAR = _BV(14); 	break;
-		}
-*/
+		//if( trycount > 32 ) printf( "%d", trycount );
 	}
 
 
@@ -113,21 +87,6 @@ void ICACHE_FLASH_ATTR testi2s_init() {
 		}
 	}
 
-	for (x=0; x<DMABUFFERDEPTH; x++) {
-		i2sBufDescTX[x].owner=1;
-		i2sBufDescTX[x].eof=1;
-		i2sBufDescTX[x].sub_sof=0;
-		i2sBufDescTX[x].datalen=I2SDMABUFLEN*4;
-		i2sBufDescTX[x].blocksize=I2SDMABUFLEN*4;
-		i2sBufDescTX[x].buf_ptr=(uint32_t)&i2sBDTX[x*I2SDMABUFLEN];
-		i2sBufDescTX[x].unused=0;
-		i2sBufDescTX[x].next_link_ptr=(int)((x<(DMABUFFERDEPTH-1))?(&i2sBufDescTX[x+1]):(&i2sBufDescTX[0]));
-		for( y = 0; y < I2SDMABUFLEN; y++ )
-		{
-			i2sBDTX[y+x*I2SDMABUFLEN] = 0x00000000;
-		}
-	}
-
 	//Reset DMA )
 	//SLC_TX_LOOP_TEST = IF this isn't set, SO will occasionally get unrecoverable errors when you underflow.
 	//Originally this little tidbit was found at https://github.com/pvvx/esp8266web/blob/master/info/libs/bios/sip_slc.c
@@ -146,8 +105,8 @@ void ICACHE_FLASH_ATTR testi2s_init() {
 	
 	CLEAR_PERI_REG_MASK(SLC_TX_LINK,SLC_TXLINK_DESCADDR_MASK);
 	SET_PERI_REG_MASK(SLC_TX_LINK, ((uint32)&i2sBufDescRX[0]) & SLC_TXLINK_DESCADDR_MASK); //any random desc is OK, we don't use TX but it needs something valid
-	CLEAR_PERI_REG_MASK(SLC_RX_LINK,SLC_RXLINK_DESCADDR_MASK);
-	SET_PERI_REG_MASK(SLC_RX_LINK, ((uint32)&i2sBufDescTX[0]) & SLC_RXLINK_DESCADDR_MASK);
+	//CLEAR_PERI_REG_MASK(SLC_RX_LINK,SLC_RXLINK_DESCADDR_MASK);
+	//SET_PERI_REG_MASK(SLC_RX_LINK, ((uint32)&i2sBufDescTX[0]) & SLC_RXLINK_DESCADDR_MASK);
 
 	//Attach the DMA interrupt
 	ets_isr_attach(ETS_SLC_INUM, slc_isr);
@@ -160,7 +119,7 @@ void ICACHE_FLASH_ATTR testi2s_init() {
 
 	//Start transmission
 	SET_PERI_REG_MASK(SLC_TX_LINK, SLC_TXLINK_START);
-	SET_PERI_REG_MASK(SLC_RX_LINK, SLC_RXLINK_START);
+	//SET_PERI_REG_MASK(SLC_RX_LINK, SLC_RXLINK_START);
 
 
 	//Init pins to i2s functions

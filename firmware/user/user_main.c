@@ -36,24 +36,28 @@ void user_rf_pre_init(void)
 os_event_t    procTaskQueue[procTaskQueueLen];
 
 
+remot_info *premot_udp = NULL;
+
+#define LEBUFFSIZE 80
+
+volatile int lestart = 0;
+struct LightEvent lebuffer[LEBUFFSIZE];
+
 static void ICACHE_FLASH_ATTR procTask(os_event_t *events)
 {
 	CSTick( 0 );
 	system_os_post(procTaskPrio, 0, 0 );
-}
 
-remot_info *premot_udp = NULL;
+}
 
 int SendPacket( struct LightEvent * data )
 {
 	if( premot_udp )
 	{
-		pUdpServer->proto.udp->remote_port = premot_udp->remote_port;
-		pUdpServer->proto.udp->remote_ip[0] = premot_udp->remote_ip[0];
-		pUdpServer->proto.udp->remote_ip[1] = premot_udp->remote_ip[1];
-		pUdpServer->proto.udp->remote_ip[2] = premot_udp->remote_ip[2];
-		pUdpServer->proto.udp->remote_ip[3] = premot_udp->remote_ip[3];
-		espconn_sendto(pUdpServer, (char*)data, sizeof( struct LightEvent ) );
+		if( lestart < LEBUFFSIZE )
+		{
+			ets_memcpy( &lebuffer[lestart++], data, sizeof( struct LightEvent ) );
+		}
 		return 0;
 	}
 	else
@@ -68,6 +72,20 @@ static void ICACHE_FLASH_ATTR myTimer(void *arg)
 	//printf( "%d %d %d %08x %08x\n", fxcycle, etx, erx, i2sBDRX[0], i2sBDRX[I2SDMABUFLEN-1] );
 	//uart0_sendStr("X");
 
+
+	if( premot_udp )
+	{
+		pUdpServer->proto.udp->remote_port = premot_udp->remote_port;
+		pUdpServer->proto.udp->remote_ip[0] = premot_udp->remote_ip[0];
+		pUdpServer->proto.udp->remote_ip[1] = premot_udp->remote_ip[1];
+		pUdpServer->proto.udp->remote_ip[2] = premot_udp->remote_ip[2];
+		pUdpServer->proto.udp->remote_ip[3] = premot_udp->remote_ip[3];
+		printf( "%d\n", lestart );
+		ETS_UART_INTR_DISABLE();
+		espconn_sendto(pUdpServer, (char*)lebuffer, sizeof( struct LightEvent )*lestart );
+		lestart = 0;
+		ETS_UART_INTR_ENABLE();
+	}
 
 	CSTick( 1 );
 }

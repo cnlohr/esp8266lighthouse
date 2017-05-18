@@ -5,8 +5,8 @@
 
 //FI2S = 40,000,000 Hz
 
-#define MAX_LHBUFF 256
-#define MAX_EDGES 512   //Can't be any more than 512 otherwise here would be a freq_denominator overflow.
+#define MAX_LHBUFF 512
+#define MAX_EDGES 640   //Can't be any more than 512 otherwise here would be a freq_denominator overflow.
 
 //XXX Tricky: On Xtensa, by keeping everything in one global structure,
 // it is actually much faster because its location need take only one

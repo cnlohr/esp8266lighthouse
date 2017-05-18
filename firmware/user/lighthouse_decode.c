@@ -55,7 +55,6 @@ void lighthouse_decode( uint32_t * data, int size_words )
 		LHSM.debugbufferflag = 3; //3 = abort. (oversized frame)
 	}
 
-	
 	for( i = 0; i < size_words; i++ )
 	{
 		uint32_t r = data[i];

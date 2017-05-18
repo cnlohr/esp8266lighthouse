@@ -8,13 +8,12 @@
 
 #include <c_types.h>
 
-#define DMABUFFERDEPTH 3
+#define DMABUFFERDEPTH 32
 #define I2SDMABUFLEN (32)
 #define LINE32LEN I2SDMABUFLEN
 #define RX_NUM (I2SDMABUFLEN)
 
 extern uint32_t i2sBDRX[I2SDMABUFLEN*DMABUFFERDEPTH];
-extern uint32_t i2sBDTX[I2SDMABUFLEN*DMABUFFERDEPTH];
 
 extern int fxcycle;
 extern int erx, etx;
