@@ -127,10 +127,81 @@ void lighthouse_decode( uint32_t * data, int size_words )
 
 
 					//All edges are now populated.  We could operate on them.
-					int edgecount = LHSM.edgetimeshead - LHSM.edgetimesbase;
-					LHSM.edgecount = edgecount;
+					int transitionct = LHSM.edgetimeshead - LHSM.edgetimesbase;
+					uint32_t * edgept = LHSM.edgetimesbase;
+					LHSM.edgecount = transitionct;
 
-					if( !LHSM.debugmonitoring || SendPacket( LHSM.debugbufferbase, LHSM.debugbufferlen ) == 0 )
+					struct LightEvent le;
+					le.gotlock = 0;
+
+					//Once we're here, we have properly formatted edges and everything!
+					{
+						uint32_t first_transition = edgept[0];
+						uint32_t average = 0; //Average
+						uint32_t stg = 0;     //Strength
+
+						uint32_t center = 0;  //Units: Fs*2
+						uint32_t centerlast = 0;
+						uint16_t ending;
+						//Also, calculate frequency.  How can we do this?
+
+						//Bins for caluclating 
+						#define FREQBINS 24
+						uint32_t binsets[FREQBINS];
+						uint32_t binqty[FREQBINS];
+						int bestbin = 0;
+						ets_memset( binsets, 0, sizeof( binsets ) );
+						ets_memset( binqty, 0, sizeof( binqty ) );
+
+						for( i = 0; i < transitionct; i+= 2 )
+						{
+							uint32_t transitioni = edgept[0];
+							uint32_t len = edgept[1] -= transitioni;
+							uint32_t tt  = edgept[0]  = transitioni - first_transition; //Transition (as starting from virtual 0)
+							ending = len + tt;
+							edgept+=2;
+
+							average += len * tt;
+							stg += len;
+							center = tt*2 + len;
+							if( i )
+							{
+								int placing = center - centerlast;
+								int interval = placing>>2;
+
+								if( interval < FREQBINS )
+								{
+									binsets[interval] ++;
+									if( binsets[interval] > binsets[bestbin] ) bestbin = interval;
+									binqty[interval] += placing;
+								}
+							}
+							centerlast = center;
+						}
+
+
+						int frequency = -1;
+						if( bestbin >= 2 && bestbin < FREQBINS-2 )
+						{
+							uint32_t * bbminus2 = &binsets[bestbin-2];
+							uint32_t totalset = bbminus2[0] + bbminus2[1] + bbminus2[2] + bbminus2[3] + bbminus2[4];
+							bbminus2 = &binqty[bestbin-2];
+							uint32_t totalqty = bbminus2[0] + bbminus2[1] + bbminus2[2] + bbminus2[3] + bbminus2[4];
+							if( totalset > 8 )
+							{
+								//WE HAVE A LOCK on a frequency and good data. Time to populate!
+								le.gotlock = 1;
+								le.firsttransition = first_transition;
+								le.average_numerator = average;
+								le.strength = stg; 
+								le.full_length = ending;
+								le.freq_numerator = totalqty;
+								le.freq_denominator = totalset;
+							}
+						}
+					}
+
+					if( !le.gotlock || !LHSM.debugmonitoring || SendPacket( &le ) == 0 )
 					{
 						LHSM.debugbufferflag = 0;
 					}

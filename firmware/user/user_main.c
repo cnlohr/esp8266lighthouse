@@ -12,6 +12,7 @@
 #include "lighthouse_decode.h"
 #include <esp82xxutil.h>
 #include <mdns.h>
+#include <lighthouse_decode.h>
 
 #define PORT 7777
 
@@ -43,7 +44,7 @@ static void ICACHE_FLASH_ATTR procTask(os_event_t *events)
 
 remot_info *premot_udp = NULL;
 
-int SendPacket( uint32_t * data, int size )
+int SendPacket( struct LightEvent * data )
 {
 	if( premot_udp )
 	{
@@ -52,9 +53,7 @@ int SendPacket( uint32_t * data, int size )
 		pUdpServer->proto.udp->remote_ip[1] = premot_udp->remote_ip[1];
 		pUdpServer->proto.udp->remote_ip[2] = premot_udp->remote_ip[2];
 		pUdpServer->proto.udp->remote_ip[3] = premot_udp->remote_ip[3];
-		data[0]--;
-		espconn_sendto(pUdpServer, (char*)data, size*4 );
-		data[0]++;
+		espconn_sendto(pUdpServer, (char*)data, sizeof( struct LightEvent ) );
 		return 0;
 	}
 	else
