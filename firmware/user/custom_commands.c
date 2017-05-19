@@ -5,6 +5,7 @@
 #include "lighthouse_decode.h"
 #include <string.h>
 
+extern remot_info premot_udp;
 
 void ICACHE_FLASH_ATTR ReinitSettings()
 {
@@ -30,6 +31,7 @@ int ICACHE_FLASH_ATTR CustomCommand(char * buffer, int retsize, char *pusrdata, 
 	{
 		LHSM.debugmonitoring = 1;
 		buffend += ets_sprintf( buffend, "CE\t%d\t%d",LHSM.debugbufferflag,LHSM.edgecount );
+		premot_udp.remote_port = 0;
 		if( LHSM.debugbufferflag == 2 )
 		{
 			buffend+= ets_sprintf( buffend, "\t" );
@@ -53,6 +55,7 @@ int ICACHE_FLASH_ATTR CustomCommand(char * buffer, int retsize, char *pusrdata, 
 	{
 		LHSM.debugmonitoring = 1;
 		buffend += ets_sprintf( buffend, "CP\t%d\t%d",LHSM.debugbufferflag,LHSM.debugbufferlen );
+		premot_udp.remote_port = 0;
 		if( LHSM.debugbufferflag == 2 )
 		{
 			int k;
