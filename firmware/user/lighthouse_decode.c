@@ -135,6 +135,7 @@ void lighthouse_decode( uint32_t * data, int size_words )
 
 					//Once we're here, we have properly formatted edges and everything!
 					{
+						int i;
 						uint32_t first_transition = edgept[0];
 						uint32_t average = 0; //Average
 						uint32_t stg = 0;     //Strength
@@ -188,8 +189,10 @@ void lighthouse_decode( uint32_t * data, int size_words )
 							uint32_t totalqty = bbminus2[0] + bbminus2[1] + bbminus2[2] + bbminus2[3] + bbminus2[4];
 							if( totalset > 8 )
 							{
+								static int stset = 0;
 								//WE HAVE A LOCK on a frequency and good data. Time to populate!
-								le.gotlock = 1;
+								le.gotlock = 1 + stset;
+								if( ++stset == 16 ) stset = 0;
 								le.firsttransition = first_transition;
 								le.average_numerator = average;
 								le.strength = stg; 

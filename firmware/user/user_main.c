@@ -14,7 +14,6 @@
 #include <mdns.h>
 #include <lighthouse_decode.h>
 
-#define PORT 7777
 
 #define procTaskPrio        0
 #define procTaskQueueLen    1
@@ -36,7 +35,7 @@ void user_rf_pre_init(void)
 os_event_t    procTaskQueue[procTaskQueueLen];
 
 
-remot_info *premot_udp = NULL;
+remot_info premot_udp;
 
 #define LEBUFFSIZE 80
 
@@ -52,7 +51,7 @@ static void ICACHE_FLASH_ATTR procTask(os_event_t *events)
 
 int SendPacket( struct LightEvent * data )
 {
-	if( premot_udp )
+	if( premot_udp.remote_port )
 	{
 		if( lestart < LEBUFFSIZE )
 		{
@@ -73,18 +72,22 @@ static void ICACHE_FLASH_ATTR myTimer(void *arg)
 	//uart0_sendStr("X");
 
 
-	if( premot_udp )
+	if( premot_udp.remote_port )
 	{
-		pUdpServer->proto.udp->remote_port = premot_udp->remote_port;
-		pUdpServer->proto.udp->remote_ip[0] = premot_udp->remote_ip[0];
-		pUdpServer->proto.udp->remote_ip[1] = premot_udp->remote_ip[1];
-		pUdpServer->proto.udp->remote_ip[2] = premot_udp->remote_ip[2];
-		pUdpServer->proto.udp->remote_ip[3] = premot_udp->remote_ip[3];
-		printf( "%d\n", lestart );
-		ETS_UART_INTR_DISABLE();
+		pUdpServer->proto.udp->remote_port = premot_udp.remote_port;
+		pUdpServer->proto.udp->remote_ip[0] = premot_udp.remote_ip[0];
+		pUdpServer->proto.udp->remote_ip[1] = premot_udp.remote_ip[1];
+		pUdpServer->proto.udp->remote_ip[2] = premot_udp.remote_ip[2];
+		pUdpServer->proto.udp->remote_ip[3] = premot_udp.remote_ip[3];
+		//printf( "%d %d %d.%d.%d.%d\n", lestart, pUdpServer->proto.udp->remote_port, pUdpServer->proto.udp->remote_ip[0], pUdpServer->proto.udp->remote_ip[1], pUdpServer->proto.udp->remote_ip[2], pUdpServer->proto.udp->remote_ip[3] );
+		if( lestart >= LEBUFFSIZE - 4 )
+		{
+			printf( "Event OVF\n" );
+		}
+		ets_intr_lock();
 		espconn_sendto(pUdpServer, (char*)lebuffer, sizeof( struct LightEvent )*lestart );
 		lestart = 0;
-		ETS_UART_INTR_ENABLE();
+		ets_intr_unlock();
 	}
 
 	CSTick( 1 );
@@ -96,10 +99,12 @@ static void ICACHE_FLASH_ATTR
 udpserver_recv(void *arg, char *pusrdata, unsigned short len)
 {
 	struct espconn *pespconn = (struct espconn *)arg;
-	espconn_get_connection_info(pespconn,&premot_udp,0);
+	remot_info *premot_udp_p = NULL;
+	espconn_get_connection_info(pespconn,&premot_udp_p,0);
+	ets_memcpy( &premot_udp, premot_udp_p, sizeof( premot_udp ) );
 	LHSM.debugbufferflag = 0;
 	LHSM.debugmonitoring = 1;
-	uart0_sendStr("X");
+	uart0_sendStr("START\n");
 }
 
 void ICACHE_FLASH_ATTR charrx( uint8_t c )
@@ -130,7 +135,7 @@ void ICACHE_FLASH_ATTR user_init(void)
 	espconn_create( pUdpServer );
 	pUdpServer->type = ESPCONN_UDP;
 	pUdpServer->proto.udp = (esp_udp *)os_zalloc(sizeof(esp_udp));
-	pUdpServer->proto.udp->local_port = 7777;
+	pUdpServer->proto.udp->local_port = 7887;
 	espconn_regist_recvcb(pUdpServer, udpserver_recv);
 	espconn_set_opt(pUdpServer, 0x04); // enable write buffer
 
@@ -153,7 +158,7 @@ void ICACHE_FLASH_ATTR user_init(void)
 	//Timer example
 	os_timer_disarm(&some_timer);
 	os_timer_setfn(&some_timer, (os_timer_func_t *)myTimer, NULL);
-	os_timer_arm(&some_timer, 100, 1);
+	os_timer_arm(&some_timer, 60, 1);
 
 	//Configure 
 	testi2s_init();

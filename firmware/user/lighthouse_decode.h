@@ -5,7 +5,7 @@
 
 //FI2S = 40,000,000 Hz
 
-#define MAX_LHBUFF 512
+#define MAX_LHBUFF 640
 #define MAX_EDGES 640   //Can't be any more than 512 otherwise here would be a freq_denominator overflow.
 
 //XXX Tricky: On Xtensa, by keeping everything in one global structure,

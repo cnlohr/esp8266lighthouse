@@ -8,8 +8,8 @@
 
 #include <c_types.h>
 
-#define DMABUFFERDEPTH 32
-#define I2SDMABUFLEN (32)
+#define DMABUFFERDEPTH 10
+#define I2SDMABUFLEN (128)
 #define LINE32LEN I2SDMABUFLEN
 #define RX_NUM (I2SDMABUFLEN)
 

@@ -57,7 +57,7 @@ LOCAL void slc_isr(void) {
 		}
 		//XXX TODO: Consider what could be causing the major delays.
 
-		//if( trycount > 32 ) printf( "%d", trycount );
+		if( trycount > DMABUFFERDEPTH-2 ) printf( "XF%d*", trycount );
 	}
 
 
