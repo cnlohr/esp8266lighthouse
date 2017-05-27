@@ -8,31 +8,6 @@
 #define MAX_LHBUFF 640
 #define MAX_EDGES 640   //Can't be any more than 512 otherwise here would be a freq_denominator overflow.
 
-//XXX Tricky: On Xtensa, by keeping everything in one global structure,
-// it is actually much faster because its location need take only one
-// register and you can offset from that register quickly.  Individual
-// global registers are slow! because they require a LR.
-//  P.S. Be sure to make this word-aligned.
-struct LHSM_type
-{
-	const unsigned short * carrierlut;  //32-bit boundary
-
-	uint16_t defaultstate;
-	uint16_t statemachinestate;         //32-bit boundary
-
-	uint32_t timebase; 					 //Current tick time (in FI2S)
-
-	uint32_t * edgetimesbase;
-	uint32_t * edgetimeshead;
-
-	uint16_t edgecount; 
-
-	uint8_t  debugmonitoring;
-	uint8_t  debugbufferflag;           //32-bit boundary
-	uint32_t debugbufferlen;			//Only updated at end of packet.
-	uint32_t * debugbufferbase;
-	uint32_t * debugbufferhead;
-};
 
 extern struct LHSM_type LHSM;
 
@@ -48,6 +23,38 @@ struct LightEvent
 	uint32_t average_numerator;		//Compressed average.  Divide by strength to get real average.
 	uint32_t firsttransition;		//In ticks
 };
+
+
+
+//XXX Tricky: On Xtensa, by keeping everything in one global structure,
+// it is actually much faster because its location need take only one
+// register and you can offset from that register quickly.  Individual
+// global registers are slow! because they require a LR.
+//  P.S. Be sure to make this word-aligned.
+struct LHSM_type
+{
+	const unsigned short * carrierlut;  //32-bit boundary
+
+	uint8_t defaultstate;
+	uint8_t last_was_interesting;
+	uint16_t statemachinestate;         //32-bit boundary
+
+	uint32_t timebase; 					 //Current tick time (in FI2S)
+
+	uint32_t * edgetimesbase;
+	uint32_t * edgetimeshead;
+
+	uint16_t edgecount; 
+
+	uint8_t  debugmonitoring;
+	uint8_t  debugbufferflag;           //32-bit boundary
+	uint32_t debugbufferlen;			//Only updated at end of packet.
+	uint32_t * debugbufferbase;
+	uint32_t * debugbufferhead;
+
+	struct LightEvent dhle;  //debug lighthouse event.
+};
+
 
 //For decidng "optical data" from the lighthouses. 
 // In particular, modulated 1.8 MHz data as it comes in off

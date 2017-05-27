@@ -56,7 +56,31 @@ function clbInfoBtn(req,data,rawdat) {
 	vtext = "";
 	var rawdat = dataarr[0];
 	var firstedge = 0;
-	for (var i = 0; i < rawdat.length;﻿ i+=4)
+
+	for( var i = 0; i < 16; i++ )
+	{
+		var n = rawdat.charCodeAt(i).toString(16);
+		if( n.length == 1 ) n = "0" + n;
+		vtext += " " + n;
+	}
+	vtext += "\n";
+
+	var valid = rawdat.charCodeAt(0);
+	var freq_denom = rawdat.charCodeAt(1);
+	var freq_num = rawdat.charCodeAt(3)<<8 | rawdat.charCodeAt(2);
+	var full_length = rawdat.charCodeAt(5)<<8 | rawdat.charCodeAt(4);
+	var strength = rawdat.charCodeAt(7)<<8 | rawdat.charCodeAt(6);
+	var average_numerator = rawdat.charCodeAt(11)<<24 | rawdat.charCodeAt(10)<<16 | rawdat.charCodeAt(9)<<8 | rawdat.charCodeAt(8);
+	var firsttransition = rawdat.charCodeAt(15)<<24 | rawdat.charCodeAt(14)<<16 | rawdat.charCodeAt(13)<<8 | rawdat.charCodeAt(12);
+
+	vtext += "ID: " + valid + "\n";
+	vtext += "At: " + firsttransition + "\n";
+	vtext += "Length: " + full_length + "\n";
+	vtext += "Center: " + average_numerator * 1.0 / strength + "\n";
+	vtext += "Freq: " + 2.0 * 40000000.0 * freq_denom / freq_num + "\n";
+	vtext += "Strength: " + strength + "\n";
+
+	for (var i = 16; i < rawdat.length;﻿ i+=4)
 	{
 		var d = rawdat.charCodeAt(i+0)<<24;
 		d |= rawdat.charCodeAt(i+1)<<16;

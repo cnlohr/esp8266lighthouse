@@ -35,6 +35,10 @@ int ICACHE_FLASH_ATTR CustomCommand(char * buffer, int retsize, char *pusrdata, 
 			buffend+= ets_sprintf( buffend, "\t" );
 			int k;
 
+			struct LightEvent * dle = &LHSM.dhle;  //false-type casting
+			ets_memcpy( buffend, dle, sizeof( struct LightEvent ) );
+			buffend += sizeof( struct LightEvent );
+
 			int tsend = LHSM.edgecount;
 			if( tsend > 300 ) tsend = 300;
 			//ets_memcpy( buffend, lighthousebuffer, tsend );

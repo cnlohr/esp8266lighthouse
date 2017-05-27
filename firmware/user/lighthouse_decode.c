@@ -58,8 +58,10 @@ void lighthouse_decode( uint32_t * data, int size_words )
 	for( i = 0; i < size_words; i++ )
 	{
 		uint32_t r = data[i];
-		if( data[i] != 0x00000000 && data[i] != 0xffffffff )
+		uint8_t is_interesting = data[i] != 0x00000000 && data[i] != 0xffffffff;
+		if( is_interesting || LHSM.last_was_interesting )
 		{
+			LHSM.last_was_interesting = is_interesting;
 			if( LHSM.debugbufferflag == 0 )
 			{
 				ResetStateMachine();
@@ -111,7 +113,7 @@ void lighthouse_decode( uint32_t * data, int size_words )
 				//is we find out what the default value is
 				//for the line, i.e. bias low or high.
 				//Then we can use that for the defualt state.
-				LHSM.defaultstate = r & 0x100; 
+				LHSM.defaultstate = (r & 0x100)>>8;
 				LHSM.debugbufferlen = LHSM.debugbufferhead - LHSM.debugbufferbase;
 
 				if( LHSM.debugbufferlen < 5 )
@@ -130,8 +132,8 @@ void lighthouse_decode( uint32_t * data, int size_words )
 					uint32_t * edgept = LHSM.edgetimesbase;
 					LHSM.edgecount = transitionct;
 
-					struct LightEvent le;
-					le.gotlock = 0;
+					struct LightEvent * le = &LHSM.dhle;
+					le->gotlock = 0;
 
 					//Once we're here, we have properly formatted edges and everything!
 					{
@@ -191,24 +193,24 @@ void lighthouse_decode( uint32_t * data, int size_words )
 							{
 								static int stset = 0;
 								//WE HAVE A LOCK on a frequency and good data. Time to populate!
-								le.gotlock = 1 + stset;
+								le->gotlock = 1 + stset;
 								if( ++stset == 16 ) stset = 0;
-								le.firsttransition = first_transition;
-								le.average_numerator = average;
-								le.strength = stg; 
-								le.full_length = ending;
-								le.freq_numerator = totalqty;
-								le.freq_denominator = totalset;
+								le->firsttransition = first_transition;
+								le->average_numerator = average;
+								le->strength = stg; 
+								le->full_length = ending;
+								le->freq_numerator = totalqty;
+								le->freq_denominator = totalset;
 							}
 						}
 					}
 
-					if( le.gotlock )
+					if( le->gotlock )
 					{
-						SendPacket( &le );
+						SendPacket( le );
 					}
 
-					if( !le.gotlock || !LHSM.debugmonitoring )
+					if( !le->gotlock || !LHSM.debugmonitoring )
 					{
 						LHSM.debugbufferflag = 0;
 					}
