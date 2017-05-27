@@ -44,8 +44,9 @@ LOCAL void slc_isr(void) {
 
 		desc = &i2sBufDescRX[k];
 
-		//XX TODO: THIS IS WRONG WRONG WRONG XXX XXX SOMETIMES IT SPINS THE WHOLE WAY ROUND NEEDLESSLY.
-		//Tricky: If we undreflow handle it carefully.
+		//Warning if your page size is limited, you can get some unusual buffer underflows where there is a missing packet.
+		//This usually only happens if your buffer size is relatively small, i.e. less than 256 words.
+
 		while( desc != finishedDesc ) {
 			desc = &i2sBufDescRX[k++];
 			if( k == DMABUFFERDEPTH ) k = 0;
@@ -55,7 +56,6 @@ LOCAL void slc_isr(void) {
 			desc->owner=1;
 			trycount++;
 		}
-		//XXX TODO: Consider what could be causing the major delays.
 
 		if( trycount > DMABUFFERDEPTH-2 ) printf( "XF%d*", trycount );
 	}

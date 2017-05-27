@@ -203,7 +203,12 @@ void lighthouse_decode( uint32_t * data, int size_words )
 						}
 					}
 
-					if( !le.gotlock || !LHSM.debugmonitoring || SendPacket( &le ) == 0 )
+					if( le.gotlock )
+					{
+						SendPacket( &le );
+					}
+
+					if( !le.gotlock || !LHSM.debugmonitoring )
 					{
 						LHSM.debugbufferflag = 0;
 					}

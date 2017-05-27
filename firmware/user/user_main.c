@@ -18,8 +18,15 @@
 #define procTaskPrio        0
 #define procTaskQueueLen    1
 
+
+#define MAX_LH_CLIENTS 5
 static volatile os_timer_t some_timer;
-static struct espconn *pUdpServer;
+static struct espconn *pTcpListener;
+static struct espconn *pTcpClients[MAX_LH_CLIENTS];
+int                    pRREnds[MAX_LH_CLIENTS];
+#define LEBUFFSIZE 256
+volatile int pRRHead = 0;
+struct LightEvent lebuffer[LEBUFFSIZE];
 
 
 //int ICACHE_FLASH_ATTR StartMDNS();
@@ -34,82 +41,126 @@ void user_rf_pre_init(void)
 
 os_event_t    procTaskQueue[procTaskQueueLen];
 
-
-remot_info premot_udp;
-
-#define LEBUFFSIZE 80
-
-volatile int lestart = 0;
-struct LightEvent lebuffer[LEBUFFSIZE];
+void ICACHE_FLASH_ATTR DumpAllConns()
+{
+	int i;
+	for( i = 0; i < MAX_LH_CLIENTS; i++ )
+	{
+		espconn_disconnect(pTcpClients[i]);
+		pTcpClients[i] = 0;
+	}
+}
 
 static void ICACHE_FLASH_ATTR procTask(os_event_t *events)
 {
+	int ic;
 	CSTick( 0 );
-	system_os_post(procTaskPrio, 0, 0 );
 
+	//Check to see if we have any connected clients we can send data.
+	int there_is_a_connection = 0;
+	for( ic = 0; ic < MAX_LH_CLIENTS; ic++ )
+	{		
+		struct espconn * sock = pTcpClients[ic];
+		if( sock )
+		{
+			there_is_a_connection = 1;
+			int prrc = pRREnds[ic];
+			if( TCPCanSend( sock, 1024 ) && prrc != pRRHead )
+			{
+				struct LightEvent les[64]; //Max 64 lighting events per packet.
+				int i = 0;
+				while( prrc != pRRHead && i < 64)
+				{
+					ets_memcpy( &les[i++], &lebuffer[prrc], sizeof( struct LightEvent ) );
+					prrc = (prrc+1)%LEBUFFSIZE;
+				}
+				pRREnds[ic] = prrc;
+				espconn_send( sock, (uint8_t*)&les[0], sizeof( struct LightEvent ) * i );
+			}
+		}
+	}
+
+	if( there_is_a_connection )
+	{
+		LHSM.debugmonitoring = 0;
+		if( LHSM.debugbufferflag == 2 )
+			LHSM.debugbufferflag = 0;
+	}
+
+	system_os_post(procTaskPrio, 0, 0 );
 }
 
 int SendPacket( struct LightEvent * data )
 {
-	if( premot_udp.remote_port )
-	{
-		if( lestart < LEBUFFSIZE )
-		{
-			ets_memcpy( &lebuffer[lestart++], data, sizeof( struct LightEvent ) );
-		}
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
+	ets_memcpy( &lebuffer[pRRHead], data, sizeof( struct LightEvent ) );
+	pRRHead = (pRRHead+1)%LEBUFFSIZE;
+	return 1;
 }
 
 //Timer event.
 static void ICACHE_FLASH_ATTR myTimer(void *arg)
 {
-	//printf( "%d %d %d %08x %08x\n", fxcycle, etx, erx, i2sBDRX[0], i2sBDRX[I2SDMABUFLEN-1] );
-	//uart0_sendStr("X");
-
-
-	if( premot_udp.remote_port )
-	{
-		pUdpServer->proto.udp->remote_port = premot_udp.remote_port;
-		pUdpServer->proto.udp->remote_ip[0] = premot_udp.remote_ip[0];
-		pUdpServer->proto.udp->remote_ip[1] = premot_udp.remote_ip[1];
-		pUdpServer->proto.udp->remote_ip[2] = premot_udp.remote_ip[2];
-		pUdpServer->proto.udp->remote_ip[3] = premot_udp.remote_ip[3];
-		//printf( "%d %d %d.%d.%d.%d\n", lestart, pUdpServer->proto.udp->remote_port, pUdpServer->proto.udp->remote_ip[0], pUdpServer->proto.udp->remote_ip[1], pUdpServer->proto.udp->remote_ip[2], pUdpServer->proto.udp->remote_ip[3] );
-		if( lestart >= LEBUFFSIZE - 4 )
-		{
-			printf( "Event OVF\n" );
-		}
-		ets_intr_lock();
-		espconn_sendto(pUdpServer, (char*)lebuffer, sizeof( struct LightEvent )*lestart );
-		lestart = 0;
-		ets_intr_unlock();
-	}
-
 	CSTick( 1 );
 }
 
 
-//Called when new packet comes in.
-static void ICACHE_FLASH_ATTR
-udpserver_recv(void *arg, char *pusrdata, unsigned short len)
-{
-	struct espconn *pespconn = (struct espconn *)arg;
-	remot_info *premot_udp_p = NULL;
-	espconn_get_connection_info(pespconn,&premot_udp_p,0);
-	ets_memcpy( &premot_udp, premot_udp_p, sizeof( premot_udp ) );
-	LHSM.debugbufferflag = 0;
-	LHSM.debugmonitoring = 1;
-	uart0_sendStr("START\n");
-}
 
 void ICACHE_FLASH_ATTR charrx( uint8_t c )
 {
 	//Called from UART.
+}
+
+
+
+
+LOCAL void ICACHE_FLASH_ATTR
+ptcp_disconnetcb(void *arg) {
+    struct espconn *pespconn = (struct espconn *) arg;
+	int ic = ((int)pespconn->reverse);
+	pTcpClients[ic] = 0;
+	printf( "Disconnect %d\n", ic );
+}
+
+LOCAL void ICACHE_FLASH_ATTR ptcp_recvcb(void *arg, char *pusrdata, unsigned short length)
+{
+    struct espconn *pespconn = (struct espconn *) arg;
+	int ic = (int)pespconn->reverse;
+	printf( "Receive %d\n", ic );
+	//TODO: Handle commands on tcp port.
+}
+
+void ICACHE_FLASH_ATTR ptcp_connect_listener(void *arg)
+{
+
+	int i;
+    struct espconn *pespconn = (struct espconn *)arg;
+
+	for( i = 0; i < MAX_LH_CLIENTS; i++ )
+	{
+		if( pTcpClients[i] == 0 )
+		{
+			pespconn->reverse = (void*)i;
+			pTcpClients[i] = pespconn;
+			pRREnds[i] = pRRHead;
+			break;
+		}
+	}
+	if( i == MAX_LH_CLIENTS )
+	{
+		espconn_disconnect( pespconn );
+		return;
+	}
+
+	printf( "New conn %d\n", i );
+
+	//http://bbs.espressif.com/viewtopic.php?f=21&t=320
+	espconn_set_opt(pespconn, 0x04); // enable write buffer
+	//Doing this allows us to queue writes in the socket, which
+	//SIGNIFICANTLY speeds up transfer in Windows.
+
+	//espconn_regist_write_finish( pespconn, http_sentcb );
+    espconn_regist_recvcb( pespconn, ptcp_recvcb );
+    espconn_regist_disconcb( pespconn, ptcp_disconnetcb );
 }
 
 void ICACHE_FLASH_ATTR user_init(void)
@@ -130,19 +181,16 @@ void ICACHE_FLASH_ATTR user_init(void)
 	//Configure buffers
 	lighthouse_setup();
 
-    pUdpServer = (struct espconn *)os_zalloc(sizeof(struct espconn));
-	ets_memset( pUdpServer, 0, sizeof( struct espconn ) );
-	espconn_create( pUdpServer );
-	pUdpServer->type = ESPCONN_UDP;
-	pUdpServer->proto.udp = (esp_udp *)os_zalloc(sizeof(esp_udp));
-	pUdpServer->proto.udp->local_port = 7887;
-	espconn_regist_recvcb(pUdpServer, udpserver_recv);
-	espconn_set_opt(pUdpServer, 0x04); // enable write buffer
-
-	if( espconn_create( pUdpServer ) )
-	{
-		while(1) { uart0_sendStr( "\r\nFAULT\r\n" ); }
-	}
+	pTcpListener = (struct espconn *)os_zalloc(sizeof(struct espconn));
+	ets_memset( pTcpListener, 0, sizeof( struct espconn ) );
+	espconn_create( pTcpListener );
+	pTcpListener->type = ESPCONN_TCP;
+    pTcpListener->state = ESPCONN_NONE;
+	pTcpListener->proto.tcp = (esp_tcp *)os_zalloc(sizeof(esp_tcp));
+	pTcpListener->proto.tcp->local_port = 10900;
+    espconn_regist_connectcb(pTcpListener, ptcp_connect_listener);
+    espconn_accept(pTcpListener);
+    espconn_regist_time(pTcpListener, 15, 0); //timeout
 
 	CSInit();
 
@@ -150,6 +198,7 @@ void ICACHE_FLASH_ATTR user_init(void)
 	AddMDNSName( "cn8266" );
 	AddMDNSName( "ws2812" );
 	AddMDNSService( "_http._tcp", "An ESP8266 Webserver", 80 );
+	AddMDNSService( "_lighthouse._tcp", "Lighthouse data source", 10900 );
 	AddMDNSService( "_cn8266._udp", "ESP8266 Backend", 7878 );
 
 	//Add a process
