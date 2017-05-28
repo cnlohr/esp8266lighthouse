@@ -1,5 +1,18 @@
 # esp8266lighthouse
 
+## Project log as of 5/28/17
+
+So, general summary / log for esp8266lighthouse:   It works.  Surprisingly well.
+
+1. If the base station is too close, it the signal quality gets pretty rough.   Too close = 0.8 meters or closer.  This may not be resolvable without a different opamp.  I don't know yet. 
+2. There are some corner cases that will cause the ESP to freeze.  This is sad-making, however shouldn't be hard to troubleshoot.
+3. The algorithm I'm using to determine frequency seems SLIGHTLY dependent on strength.  When pointed directly at the lighthouse and close, it seems to read slightly high (by about 10-15 kHz)  When at glancing angle or barely visible, it reads spot on.
+4. The noise issue due to the ESP is really confusing to me.  Arbitrary moving something or switching power plugs around drastically changes the performance of the system.
+5. The ESP8266 will draw ~14mA even in modem-sleep mode all the time if it is monitoring for a lighthouse.  This is sad.  I want to move to an FPGA, but because of the pinout on the ICE40 FPGAs and the fact they never put them in a reasonable package, PCBs for them cost about 10x what normal PCBs cost.
+6. Though I can precisely tell frequencies, I cannot simultaneously decode pulses. Each pulse must have about 2uS between them in order to be treated as different pulses.   If we run lighthouses asynchronously, there will be some collisions.  They will need to be ignored.
+7. The base stations CAN be run asynchronously and at different rates.  It seems to me that if the lighthouses are operating at the same frequency, they cannot disambiguate asynchronous pulses, but, we should be able to.
+
+
 ## Internal notes:
 
 ```
