@@ -22,6 +22,11 @@ struct LightEvent
 
 	uint32_t average_numerator;		//Compressed average.  Divide by strength to get real average.
 	uint32_t firsttransition;		//In ticks
+
+	uint8_t  t1mark;
+	uint8_t  t2mark;
+	uint8_t  t3mark;
+	uint8_t  t4mark;
 };
 
 

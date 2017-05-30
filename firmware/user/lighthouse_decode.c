@@ -135,6 +135,8 @@ void lighthouse_decode( uint32_t * data, int size_words )
 					struct LightEvent * le = &LHSM.dhle;
 					le->gotlock = 0;
 
+					
+
 					//Once we're here, we have properly formatted edges and everything!
 					{
 						int i;
@@ -155,9 +157,16 @@ void lighthouse_decode( uint32_t * data, int size_words )
 						ets_memset( binsets, 0, sizeof( binsets ) );
 						ets_memset( binqty, 0, sizeof( binqty ) );
 
+						
+						uint32_t transitioni = edgept[0];
+						le->t1mark = edgept[1] - transitioni;
+						le->t2mark = edgept[2] - transitioni;
+						le->t3mark = edgept[3] - transitioni;
+						le->t4mark = edgept[4] - transitioni;
+
 						for( i = 0; i < transitionct; i+= 2 )
 						{
-							uint32_t transitioni = edgept[0];
+							transitioni = edgept[0];
 							uint32_t len = edgept[1] -= transitioni;
 							uint32_t tt  = edgept[0]  = transitioni - first_transition; //Transition (as starting from virtual 0)
 							ending = len + tt;

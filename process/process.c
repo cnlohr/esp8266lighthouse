@@ -48,7 +48,10 @@ int main()
 		uint16_t strength = Read16();
 		uint32_t average_numerator = Read32();
 		uint32_t firsttransition = Read32();
-
-		printf( "%d\t%10u\t%5u\t%10.2f\t%10.2f\t%5d\n",sensor, firsttransition, full_length, (average_numerator)*1.0/strength, 2.0 * 40000000.0 * freq_denom / freq_num,strength );
+		uint8_t  trans1 = Read8();
+		uint8_t  trans2 = Read8();
+		uint8_t  trans3 = Read8();
+		uint8_t  trans4 = Read8();
+		printf( "%d\t%10u\t%5u\t%10.2f\t%10.2f\t%5d\t%d\t%d\t%d\t%d\n",sensor, firsttransition, full_length, (average_numerator)*1.0/strength, 2.0 * 40000000.0 * freq_denom / freq_num,strength,trans1,trans2,trans3,trans4 );
 	}
 }
