@@ -169,6 +169,7 @@ void ICACHE_FLASH_ATTR user_init(void)
 //	ets_delay_us(200000 );
 	uart0_sendStr("\r\nesp8266 ws2812 driver\r\n");
 
+
 //	int opm = wifi_get_opmode();
 //	if( opm == 1 ) need_to_switch_opmode = 120;
 //	wifi_set_opmode_current(2);

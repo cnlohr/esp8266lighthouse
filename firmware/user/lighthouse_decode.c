@@ -180,7 +180,7 @@ void lighthouse_decode( uint32_t * data, int size_words )
 								int placing = center - centerlast;
 								int interval = placing>>2;
 
-								if( interval < FREQBINS )
+								if( interval < FREQBINS && interval > 0 )
 								{
 									binsets[interval] ++;
 									if( binsets[interval] > binsets[bestbin] ) bestbin = interval;
@@ -198,7 +198,7 @@ void lighthouse_decode( uint32_t * data, int size_words )
 							uint32_t totalset = bbminus2[0] + bbminus2[1] + bbminus2[2] + bbminus2[3] + bbminus2[4];
 							bbminus2 = &binqty[bestbin-2];
 							uint32_t totalqty = bbminus2[0] + bbminus2[1] + bbminus2[2] + bbminus2[3] + bbminus2[4];
-							if( totalset > 8 )
+							if( totalset > 6 )
 							{
 								static int stset = 0;
 								//WE HAVE A LOCK on a frequency and good data. Time to populate!
